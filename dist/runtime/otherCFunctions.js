@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.yn = exports.jn = exports.append = exports.__range__ = exports.isalnumorunderscore = exports.isalpha = exports.isdigit = exports.isspace = exports.clear_term = exports.doubleToReasonableString = exports.strcmp = void 0;
-const run_1 = require("./run");
+exports.yn = exports.jn = exports.append = exports.isalnumorunderscore = exports.isalpha = exports.isdigit = exports.isspace = exports.clear_term = exports.doubleToReasonableString = exports.strcmp = void 0;
 const bignum_1 = require("../sources/bignum");
 const is_1 = require("../sources/is");
-const defs_1 = require("./defs");
-const symbol_1 = require("./symbol");
 const list_1 = require("../sources/list");
+const defs_1 = require("./defs");
+const run_1 = require("./run");
+const symbol_1 = require("./symbol");
 function strcmp(str1, str2) {
     if (str1 === str2) {
         return 0;
@@ -26,7 +26,7 @@ function doubleToReasonableString(d) {
     if (defs_1.defs.codeGen || defs_1.defs.fullDoubleOutput) {
         return '' + d;
     }
-    if (is_1.isZeroAtomOrTensor(symbol_1.get_binding(defs_1.symbol(defs_1.FORCE_FIXED_PRINTOUT)))) {
+    if (is_1.isZeroAtomOrTensor(symbol_1.get_binding(symbol_1.symbol(defs_1.FORCE_FIXED_PRINTOUT)))) {
         stringRepresentation = '' + d;
         // manipulate the string so that it can be parsed by
         // Algebrite (something like 1.23e-123 wouldn't cut it because
@@ -56,7 +56,7 @@ function doubleToReasonableString(d) {
         }
     }
     else {
-        const maxFixedPrintoutDigits = bignum_1.nativeInt(symbol_1.get_binding(defs_1.symbol(defs_1.MAX_FIXED_PRINTOUT_DIGITS)));
+        const maxFixedPrintoutDigits = bignum_1.nativeInt(symbol_1.get_binding(symbol_1.symbol(defs_1.MAX_FIXED_PRINTOUT_DIGITS)));
         //console.log "maxFixedPrintoutDigits: " + maxFixedPrintoutDigits
         //console.log "type: " + typeof(maxFixedPrintoutDigits)
         //console.log "toFixed: " + d.toFixed(maxFixedPrintoutDigits)
@@ -130,16 +130,6 @@ function isalnumorunderscore(str) {
     return isalphaOrUnderscore(str) || isdigit(str);
 }
 exports.isalnumorunderscore = isalnumorunderscore;
-function __range__(left, right, inclusive) {
-    let range = [];
-    let ascending = left < right;
-    let end = !inclusive ? right : ascending ? right + 1 : right - 1;
-    for (let i = left; ascending ? i < end : i > end; ascending ? i++ : i--) {
-        range.push(i);
-    }
-    return range;
-}
-exports.__range__ = __range__;
 // Append one list to another.
 function append(p1, p2) {
     // from https://github.com/gbl08ma/eigenmath/blob/8be989f00f2f6f37989bb7fd2e75a83f882fdc49/src/append.cpp

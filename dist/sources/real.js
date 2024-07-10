@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.real = exports.Eval_real = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const conj_1 = require("./conj");
@@ -20,8 +19,7 @@ const rect_1 = require("./rect");
   exp(i a)  cos(a)
 */
 function Eval_real(p1) {
-    const result = real(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return real(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_real = Eval_real;
 function real(p) {

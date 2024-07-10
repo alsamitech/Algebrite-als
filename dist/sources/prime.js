@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_prime = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 //-----------------------------------------------------------------------------
@@ -16,8 +15,7 @@ const eval_1 = require("./eval");
 //
 //-----------------------------------------------------------------------------
 function Eval_prime(p1) {
-    const result = prime(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return prime(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_prime = Eval_prime;
 function prime(p1) {

@@ -1,19 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sort = exports.sort_stack = exports.square = exports.exponential = exports.yyexpand = exports.length = exports.cmp_expr = exports.sign = exports.lessp = exports.equal = exports.zero_matrix = exports.new_string = void 0;
+exports.sort = exports.square = exports.exponential = exports.yyexpand = exports.length = exports.cmp_expr = exports.sign = exports.lessp = exports.equal = exports.zero_matrix = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const otherCFunctions_1 = require("../runtime/otherCFunctions");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const power_1 = require("./power");
 const tensor_1 = require("./tensor");
-function new_string(s) {
-    stack_1.push(new defs_1.Str(s.toString()));
-}
-exports.new_string = new_string;
 // both ints
 function zero_matrix(i, j) {
     const m = alloc_1.alloc_tensor(i * j);
@@ -66,10 +61,10 @@ function cmp_expr(p1, p2) {
     if (p1 === p2) {
         return 0;
     }
-    if (p1 === defs_1.symbol(defs_1.NIL)) {
+    if (p1 === symbol_1.symbol(defs_1.NIL)) {
         return -1;
     }
-    if (p2 === defs_1.symbol(defs_1.NIL)) {
+    if (p2 === symbol_1.symbol(defs_1.NIL)) {
         return 1;
     }
     if (defs_1.isNumericAtom(p1) && defs_1.isNumericAtom(p2)) {
@@ -132,18 +127,18 @@ function length(p) {
 }
 exports.length = length;
 function unique(p) {
-    let p1 = defs_1.symbol(defs_1.NIL);
-    const p2 = defs_1.symbol(defs_1.NIL);
+    let p1 = symbol_1.symbol(defs_1.NIL);
+    const p2 = symbol_1.symbol(defs_1.NIL);
     unique_f(p, p1, p2);
-    if (p2 !== defs_1.symbol(defs_1.NIL)) {
-        p1 = defs_1.symbol(defs_1.NIL);
+    if (p2 !== symbol_1.symbol(defs_1.NIL)) {
+        p1 = symbol_1.symbol(defs_1.NIL);
     }
     p = p1;
     return p;
 }
 function unique_f(p, p1, p2) {
     if (defs_1.isstr(p)) {
-        if (p1 === defs_1.symbol(defs_1.NIL)) {
+        if (p1 === symbol_1.symbol(defs_1.NIL)) {
             p1 = p;
         }
         else if (p !== p1) {
@@ -153,7 +148,7 @@ function unique_f(p, p1, p2) {
     }
     while (defs_1.iscons(p)) {
         unique_f(defs_1.car(p), p1, p2);
-        if (p2 !== defs_1.symbol(defs_1.NIL)) {
+        if (p2 !== symbol_1.symbol(defs_1.NIL)) {
             return;
         }
         p = defs_1.cdr(p);
@@ -164,27 +159,13 @@ function yyexpand(p1) {
 }
 exports.yyexpand = yyexpand;
 function exponential(p1) {
-    return power_1.power(defs_1.symbol(defs_1.E), p1);
+    return power_1.power(symbol_1.symbol(defs_1.E), p1);
 }
 exports.exponential = exponential;
 function square(p1) {
     return power_1.power(p1, bignum_1.integer(2));
 }
 exports.square = square;
-//__cmp = (p1, p2) ->
-//  return cmp_expr(p1, p2)
-// n an integer
-function sort_stack(n) {
-    //qsort(stack + tos - n, n, sizeof (U *), __cmp)
-    const h = defs_1.defs.tos - n;
-    const subsetOfStack = defs_1.defs.stack.slice(h, h + n);
-    subsetOfStack.sort(cmp_expr);
-    defs_1.defs.stack = defs_1.defs.stack
-        .slice(0, h)
-        .concat(subsetOfStack)
-        .concat(defs_1.defs.stack.slice(h + n));
-}
-exports.sort_stack = sort_stack;
 function sort(arr) {
     arr.sort(cmp_expr);
 }

@@ -4,7 +4,7 @@ exports.roots = exports.Eval_roots = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const abs_1 = require("./abs");
 const add_1 = require("./add");
@@ -35,12 +35,12 @@ function Eval_roots(POLY) {
     // A == B -> A - B
     let X = defs_1.cadr(POLY);
     let POLY1;
-    if (defs_1.car(X) === defs_1.symbol(defs_1.SETQ) || defs_1.car(X) === defs_1.symbol(defs_1.TESTEQ)) {
+    if (defs_1.car(X) === symbol_1.symbol(defs_1.SETQ) || defs_1.car(X) === symbol_1.symbol(defs_1.TESTEQ)) {
         POLY1 = add_1.subtract(eval_1.Eval(defs_1.cadr(X)), eval_1.Eval(defs_1.caddr(X)));
     }
     else {
         X = eval_1.Eval(X);
-        if (defs_1.car(X) === defs_1.symbol(defs_1.SETQ) || defs_1.car(X) === defs_1.symbol(defs_1.TESTEQ)) {
+        if (defs_1.car(X) === symbol_1.symbol(defs_1.SETQ) || defs_1.car(X) === symbol_1.symbol(defs_1.TESTEQ)) {
             POLY1 = add_1.subtract(eval_1.Eval(defs_1.cadr(X)), eval_1.Eval(defs_1.caddr(X)));
         }
         else {
@@ -49,17 +49,16 @@ function Eval_roots(POLY) {
     }
     // 2nd arg, x
     X = eval_1.Eval(defs_1.caddr(POLY));
-    const X1 = X === defs_1.symbol(defs_1.NIL) ? guess_1.guess(POLY1) : X;
+    const X1 = X === symbol_1.symbol(defs_1.NIL) ? guess_1.guess(POLY1) : X;
     if (!is_1.ispolyexpandedform(POLY1, X1)) {
         run_1.stop('roots: 1st argument is not a polynomial in the variable ' + X1);
     }
-    stack_1.push_all(roots(POLY1, X1));
+    return roots(POLY1, X1);
 }
 exports.Eval_roots = Eval_roots;
 function hasImaginaryCoeff(k) {
     return k.some((c) => is_1.iscomplexnumber(c));
 }
-// polycoeff = tos
 // k[0]      Coefficient of x^0
 // k[n-1]    Coefficient of x^(n-1)
 function isSimpleRoot(k) {
@@ -82,9 +81,9 @@ function roots(POLY, X) {
     // of recursion does the job. Beyond that, we probably got stuck in a
     // strange case of infinite recursion, so bail out and return NIL.
     if (defs_1.defs.recursionLevelNestedRadicalsRemoval > 1) {
-        return [defs_1.symbol(defs_1.NIL)];
+        return symbol_1.symbol(defs_1.NIL);
     }
-    log.debug(`checking if ${stack_1.top()} is a case of simple roots`);
+    log.debug(`checking if ${POLY} is a case of simple roots`);
     const k = normalisedCoeff(POLY, X);
     const results = [];
     if (isSimpleRoot(k)) {
@@ -104,16 +103,17 @@ function roots(POLY, X) {
         run_1.stop('roots: the polynomial is not factorable, try nroots');
     }
     if (n === 1) {
-        return results;
+        return results[0];
     }
     misc_1.sort(results);
-    POLY = alloc_1.alloc_tensor(n);
-    POLY.tensor.ndim = 1;
-    POLY.tensor.dim[0] = n;
+    const tensor = alloc_1.alloc_tensor(n);
+    tensor.tensor.ndim = 1;
+    tensor.tensor.dim[0] = n;
     for (let i = 0; i < n; i++) {
-        POLY.tensor.elem[i] = results[i];
+        tensor.tensor.elem[i] = results[i];
     }
-    return [POLY];
+    console.log(`roots returning ${tensor}`);
+    return tensor;
 }
 exports.roots = roots;
 // ok to generate these roots take a look at their form
@@ -213,7 +213,7 @@ function _solveDegree1(A, B) {
     return [multiply_1.negate(multiply_1.divide(B, A))];
 }
 function _solveDegree2(A, B, C) {
-    // (B^2 - 4AC)^(1/2)
+    //(B^2 - 4AC)^(1/2)
     const p6 = power_1.power(
     // prettier-ignore
     add_1.subtract(power_1.power(B, bignum_1.integer(2)), multiply_1.multiply(multiply_1.multiply(bignum_1.integer(4), A), C)), bignum_1.rational(1, 2));
@@ -344,7 +344,7 @@ function _solveDegree4(A, B, C, D, E) {
 }
 function _solveDegree4Biquadratic(A, B, C, D, E) {
     log.debug('biquadratic case');
-    const biquadraticSolutions = roots(add_1.add(multiply_1.multiply(A, power_1.power(defs_1.symbol(defs_1.SECRETX), bignum_1.integer(2))), add_1.add(multiply_1.multiply(C, defs_1.symbol(defs_1.SECRETX)), E)), defs_1.symbol(defs_1.SECRETX))[0];
+    const biquadraticSolutions = roots(add_1.add(multiply_1.multiply(A, power_1.power(symbol_1.symbol(defs_1.SECRETX), bignum_1.integer(2))), add_1.add(multiply_1.multiply(C, symbol_1.symbol(defs_1.SECRETX)), E)), symbol_1.symbol(defs_1.SECRETX));
     const results = [];
     for (const sol of biquadraticSolutions.tensor.elem) {
         results.push(simplify_1.simplify(power_1.power(sol, bignum_1.rational(1, 2))));
@@ -362,9 +362,9 @@ function _solveDegree4ZeroB(A, B, C, D, E) {
     const coeff2 = multiply_1.multiply(bignum_1.rational(5, 2), R_p);
     const coeff3 = add_1.subtract(multiply_1.multiply(bignum_1.integer(2), power_1.power(R_p, bignum_1.integer(2))), R_r);
     const coeff4 = add_1.add(multiply_1.multiply(bignum_1.rational(-1, 2), multiply_1.multiply(R_p, R_r)), add_1.add(multiply_1.divide(power_1.power(R_p, bignum_1.integer(3)), bignum_1.integer(2)), multiply_1.multiply(bignum_1.rational(-1, 8), power_1.power(R_q, bignum_1.integer(2)))));
-    const arg1 = add_1.add(power_1.power(defs_1.symbol(defs_1.SECRETX), bignum_1.integer(3)), add_1.add(multiply_1.multiply(coeff2, power_1.power(defs_1.symbol(defs_1.SECRETX), bignum_1.integer(2))), add_1.add(multiply_1.multiply(coeff3, defs_1.symbol(defs_1.SECRETX)), coeff4)));
-    log.debug(`resolventCubic: ${stack_1.top()}`);
-    const resolventCubicSolutions = roots(arg1, defs_1.symbol(defs_1.SECRETX))[0];
+    const arg1 = add_1.add(power_1.power(symbol_1.symbol(defs_1.SECRETX), bignum_1.integer(3)), add_1.add(multiply_1.multiply(coeff2, power_1.power(symbol_1.symbol(defs_1.SECRETX), bignum_1.integer(2))), add_1.add(multiply_1.multiply(coeff3, symbol_1.symbol(defs_1.SECRETX)), coeff4)));
+    log.debug(`resolventCubic: ${arg1}`);
+    const resolventCubicSolutions = roots(arg1, symbol_1.symbol(defs_1.SECRETX));
     log.debug(`resolventCubicSolutions: ${resolventCubicSolutions}`);
     let R_m = null;
     //R_m = resolventCubicSolutions.tensor.elem[1]
@@ -403,15 +403,14 @@ function _solveDegree4NonzeroB(A, B, C, D, E) {
     const R_a2_d = multiply_1.multiply(multiply_1.multiply(A, A), D);
     // convert to depressed quartic
     let R_r = multiply_1.divide(add_1.add(multiply_1.multiply(power_1.power(B, bignum_1.integer(4)), bignum_1.integer(-3)), add_1.add(multiply_1.multiply(bignum_1.integer(256), multiply_1.multiply(R_a3, E)), add_1.add(multiply_1.multiply(bignum_1.integer(-64), multiply_1.multiply(R_a2_d, B)), multiply_1.multiply(bignum_1.integer(16), multiply_1.multiply(R_b2, multiply_1.multiply(A, C)))))), multiply_1.multiply(bignum_1.integer(256), power_1.power(A, bignum_1.integer(4))));
-    const four_x_4 = power_1.power(defs_1.symbol(defs_1.SECRETX), bignum_1.integer(4));
-    const r_q_x_2 = multiply_1.multiply(R_p, power_1.power(defs_1.symbol(defs_1.SECRETX), bignum_1.integer(2)));
-    const r_q_x = multiply_1.multiply(R_q, defs_1.symbol(defs_1.SECRETX));
+    const four_x_4 = power_1.power(symbol_1.symbol(defs_1.SECRETX), bignum_1.integer(4));
+    const r_q_x_2 = multiply_1.multiply(R_p, power_1.power(symbol_1.symbol(defs_1.SECRETX), bignum_1.integer(2)));
+    const r_q_x = multiply_1.multiply(R_q, symbol_1.symbol(defs_1.SECRETX));
     const simplified = simplify_1.simplify(add_1.add_all([four_x_4, r_q_x_2, r_q_x, R_r]));
-    const depressedSolutions = roots(simplified, defs_1.symbol(defs_1.SECRETX))[0];
+    const depressedSolutions = roots(simplified, symbol_1.symbol(defs_1.SECRETX));
     log.debug(`p for depressed quartic: ${R_p}`);
     log.debug(`q for depressed quartic: ${R_q}`);
     log.debug(`r for depressed quartic: ${R_r}`);
-    log.debug(`tos 4 ${defs_1.defs.tos}`);
     log.debug(`4 * x^4: ${four_x_4}`);
     log.debug(`R_p * x^2: ${r_q_x_2}`);
     log.debug(`R_q * x: ${r_q_x}`);

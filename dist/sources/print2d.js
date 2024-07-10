@@ -91,7 +91,7 @@ function print2dascii(p) {
 }
 exports.print2dascii = print2dascii;
 function emit_top_expr(p) {
-    if (defs_1.car(p) === defs_1.symbol(defs_1.SETQ)) {
+    if (defs_1.car(p) === symbol_1.symbol(defs_1.SETQ)) {
         emit_expr(defs_1.cadr(p));
         __emit_str(' = ');
         emit_expr(defs_1.caddr(p));
@@ -219,7 +219,7 @@ function emit_term(p) {
     }
 }
 function isdenominator(p) {
-    return defs_1.ispower(p) && defs_1.cadr(p) !== defs_1.symbol(defs_1.E) && __is_negative(defs_1.caddr(p));
+    return defs_1.ispower(p) && defs_1.cadr(p) !== symbol_1.symbol(defs_1.E) && __is_negative(defs_1.caddr(p));
 }
 function count_denominators(p) {
     let count = 0;
@@ -493,7 +493,7 @@ function emit_power(p) {
     let k1 = 0;
     let k2 = 0;
     let x = 0;
-    if (defs_1.cadr(p) === defs_1.symbol(defs_1.E)) {
+    if (defs_1.cadr(p) === symbol_1.symbol(defs_1.E)) {
         __emit_str('exp(');
         emit_expr(defs_1.caddr(p));
         __emit_char(')');
@@ -583,7 +583,7 @@ function emit_denominator(p, n) {
     fixup_power(k1, k2);
 }
 function emit_function(p) {
-    if (defs_1.car(p) === defs_1.symbol(defs_1.INDEX) && defs_1.issymbol(defs_1.cadr(p))) {
+    if (defs_1.car(p) === symbol_1.symbol(defs_1.INDEX) && defs_1.issymbol(defs_1.cadr(p))) {
         emit_index_function(p);
         return;
     }
@@ -591,7 +591,7 @@ function emit_function(p) {
         emit_factorial_function(p);
         return;
     }
-    if (defs_1.car(p) === defs_1.symbol(defs_1.DERIVATIVE)) {
+    if (defs_1.car(p) === symbol_1.symbol(defs_1.DERIVATIVE)) {
         __emit_char('d');
     }
     else {
@@ -613,10 +613,10 @@ function emit_function(p) {
 }
 function emit_index_function(p) {
     p = defs_1.cdr(p);
-    if (defs_1.caar(p) === defs_1.symbol(defs_1.ADD) ||
-        defs_1.caar(p) === defs_1.symbol(defs_1.MULTIPLY) ||
-        defs_1.caar(p) === defs_1.symbol(defs_1.POWER) ||
-        defs_1.caar(p) === defs_1.symbol(defs_1.FACTORIAL)) {
+    if (defs_1.caar(p) === symbol_1.symbol(defs_1.ADD) ||
+        defs_1.caar(p) === symbol_1.symbol(defs_1.MULTIPLY) ||
+        defs_1.caar(p) === symbol_1.symbol(defs_1.POWER) ||
+        defs_1.caar(p) === symbol_1.symbol(defs_1.FACTORIAL)) {
         emit_subexpr(defs_1.car(p));
     }
     else {
@@ -655,7 +655,7 @@ function emit_subexpr(p) {
     __emit_char(')');
 }
 function emit_symbol(p) {
-    if (p === defs_1.symbol(defs_1.E)) {
+    if (p === symbol_1.symbol(defs_1.E)) {
         __emit_str('exp(1)');
         return;
     }

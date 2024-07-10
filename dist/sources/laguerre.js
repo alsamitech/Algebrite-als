@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_laguerre = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -38,19 +38,19 @@ function Eval_laguerre(p1) {
     const X = eval_1.Eval(defs_1.cadr(p1));
     const N = eval_1.Eval(defs_1.caddr(p1));
     const p2 = eval_1.Eval(defs_1.cadddr(p1));
-    const K = p2 === defs_1.symbol(defs_1.NIL) ? defs_1.Constants.zero : p2;
-    stack_1.push(laguerre(X, N, K));
+    const K = p2 === symbol_1.symbol(defs_1.NIL) ? defs_1.Constants.zero : p2;
+    return laguerre(X, N, K);
 }
 exports.Eval_laguerre = Eval_laguerre;
 function laguerre(X, N, K) {
     let n = bignum_1.nativeInt(N);
     if (n < 0 || isNaN(n)) {
-        return list_1.makeList(defs_1.symbol(defs_1.LAGUERRE), X, N, K);
+        return list_1.makeList(symbol_1.symbol(defs_1.LAGUERRE), X, N, K);
     }
     if (defs_1.issymbol(X)) {
         return laguerre2(n, X, K);
     }
-    return eval_1.Eval(subst_1.subst(laguerre2(n, defs_1.symbol(defs_1.SECRETX), K), defs_1.symbol(defs_1.SECRETX), X));
+    return eval_1.Eval(subst_1.subst(laguerre2(n, symbol_1.symbol(defs_1.SECRETX), K), symbol_1.symbol(defs_1.SECRETX), X));
 }
 function laguerre2(n, p1, p3) {
     let Y0 = defs_1.Constants.zero;

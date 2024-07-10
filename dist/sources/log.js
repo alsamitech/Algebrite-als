@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logarithm = exports.Eval_log = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const denominator_1 = require("./denominator");
@@ -20,12 +20,11 @@ const numerator_1 = require("./numerator");
 // for the "common" logarithm i.e. base 10. Also note that Google
 // calculations use log for the common logarithm.
 function Eval_log(p1) {
-    const result = logarithm(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return logarithm(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_log = Eval_log;
 function logarithm(p1) {
-    if (p1 === defs_1.symbol(defs_1.E)) {
+    if (p1 === symbol_1.symbol(defs_1.E)) {
         return defs_1.Constants.one;
     }
     if (is_1.equaln(p1, 1)) {
@@ -49,6 +48,6 @@ function logarithm(p1) {
     if (defs_1.ismultiply(p1)) {
         return p1.tail().map(logarithm).reduce(add_1.add, defs_1.Constants.zero);
     }
-    return list_1.makeList(defs_1.symbol(defs_1.LOG), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.LOG), p1);
 }
 exports.logarithm = logarithm;

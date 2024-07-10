@@ -4,14 +4,13 @@ exports.Eval_shape = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
 // shape of tensor
 function Eval_shape(p1) {
     const result = shape(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return result;
 }
 exports.Eval_shape = Eval_shape;
 function shape(p1) {

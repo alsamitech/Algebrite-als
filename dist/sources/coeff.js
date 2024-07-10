@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.coeff = exports.Eval_coeff = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
@@ -29,13 +29,13 @@ function Eval_coeff(p1) {
     let N = eval_1.Eval(defs_1.cadddr(p1));
     let X = eval_1.Eval(defs_1.caddr(p1));
     const P = eval_1.Eval(defs_1.cadr(p1));
-    if (N === defs_1.symbol(defs_1.NIL)) {
+    if (N === symbol_1.symbol(defs_1.NIL)) {
         // only 2 args?
         N = X;
-        X = defs_1.symbol(defs_1.SYMBOL_X);
+        X = symbol_1.symbol(defs_1.SYMBOL_X);
     }
     // divide p by x^n, keep the constant part
-    stack_1.push(filter_1.filter(multiply_1.divide(P, power_1.power(X, N)), X));
+    return filter_1.filter(multiply_1.divide(P, power_1.power(X, N)), X);
 }
 exports.Eval_coeff = Eval_coeff;
 //-----------------------------------------------------------------------------

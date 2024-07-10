@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_defint = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
 const integral_1 = require("./integral");
@@ -58,6 +57,6 @@ function Eval_defint(p1) {
         // integral.
         F = add_1.subtract(arg1, arg2);
     }
-    stack_1.push(F);
+    return F;
 }
 exports.Eval_defint = Eval_defint;

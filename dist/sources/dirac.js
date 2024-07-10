@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.dirac = exports.Eval_dirac = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
 const list_1 = require("./list");
@@ -17,8 +17,7 @@ const multiply_1 = require("./multiply");
 //  dirac(b-a)=dirac(a-b)
 //-----------------------------------------------------------------------------
 function Eval_dirac(p1) {
-    const result = dirac(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return dirac(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_dirac = Eval_dirac;
 function dirac(p1) {
@@ -39,13 +38,13 @@ function ydirac(p1) {
         return defs_1.Constants.zero;
     }
     if (defs_1.ispower(p1)) {
-        return list_1.makeList(defs_1.symbol(defs_1.DIRAC), defs_1.cadr(p1));
+        return list_1.makeList(symbol_1.symbol(defs_1.DIRAC), defs_1.cadr(p1));
     }
     if (is_1.isnegativeterm(p1)) {
-        return list_1.makeList(defs_1.symbol(defs_1.DIRAC), multiply_1.negate(p1));
+        return list_1.makeList(symbol_1.symbol(defs_1.DIRAC), multiply_1.negate(p1));
     }
     if (is_1.isnegativeterm(p1) || (defs_1.isadd(p1) && is_1.isnegativeterm(defs_1.cadr(p1)))) {
         p1 = multiply_1.negate(p1);
     }
-    return list_1.makeList(defs_1.symbol(defs_1.DIRAC), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.DIRAC), p1);
 }

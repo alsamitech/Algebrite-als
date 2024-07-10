@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_legendre = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -47,8 +47,8 @@ function Eval_legendre(p1) {
     const X = eval_1.Eval(defs_1.cadr(p1));
     const N = eval_1.Eval(defs_1.caddr(p1));
     const p2 = eval_1.Eval(defs_1.cadddr(p1));
-    const M = p2 === defs_1.symbol(defs_1.NIL) ? defs_1.Constants.zero : p2;
-    stack_1.push(legendre(X, N, M));
+    const M = p2 === symbol_1.symbol(defs_1.NIL) ? defs_1.Constants.zero : p2;
+    return legendre(X, N, M);
 }
 exports.Eval_legendre = Eval_legendre;
 function legendre(X, N, M) {
@@ -58,15 +58,15 @@ function __legendre(X, N, M) {
     let n = bignum_1.nativeInt(N);
     let m = bignum_1.nativeInt(M);
     if (n < 0 || isNaN(n) || m < 0 || isNaN(m)) {
-        return list_1.makeList(defs_1.symbol(defs_1.LEGENDRE), X, N, M);
+        return list_1.makeList(symbol_1.symbol(defs_1.LEGENDRE), X, N, M);
     }
     let result;
     if (defs_1.issymbol(X)) {
         result = __legendre2(n, m, X);
     }
     else {
-        const expr = __legendre2(n, m, defs_1.symbol(defs_1.SECRETX));
-        result = eval_1.Eval(subst_1.subst(expr, defs_1.symbol(defs_1.SECRETX), X));
+        const expr = __legendre2(n, m, symbol_1.symbol(defs_1.SECRETX));
+        result = eval_1.Eval(subst_1.subst(expr, symbol_1.symbol(defs_1.SECRETX), X));
     }
     result = __legendre3(result, m, X) || result;
     return result;
@@ -101,10 +101,10 @@ function __legendre3(p1, m, X) {
         return;
     }
     let base = add_1.subtract(defs_1.Constants.one, misc_1.square(X));
-    if (defs_1.car(X) === defs_1.symbol(defs_1.COS)) {
+    if (defs_1.car(X) === symbol_1.symbol(defs_1.COS)) {
         base = misc_1.square(sin_1.sine(defs_1.cadr(X)));
     }
-    else if (defs_1.car(X) === defs_1.symbol(defs_1.SIN)) {
+    else if (defs_1.car(X) === symbol_1.symbol(defs_1.SIN)) {
         base = misc_1.square(cos_1.cosine(defs_1.cadr(X)));
     }
     let result = multiply_1.multiply(p1, power_1.power(base, multiply_1.multiply(bignum_1.integer(m), bignum_1.rational(1, 2))));

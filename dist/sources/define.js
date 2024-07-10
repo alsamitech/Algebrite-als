@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_function_reference = exports.define_user_function = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const eval_1 = require("./eval");
 const list_1 = require("./list");
@@ -48,7 +47,7 @@ function define_user_function(p1) {
         run_1.stop('function name?');
     }
     // evaluate function body (maybe)
-    if (defs_1.car(B) === defs_1.symbol(defs_1.EVAL)) {
+    if (defs_1.car(B) === symbol_1.symbol(defs_1.EVAL)) {
         B = eval_1.Eval(defs_1.cadr(B));
     }
     // note how, unless explicitly forced by an eval,
@@ -63,13 +62,13 @@ function define_user_function(p1) {
     // which would need to otherwise
     // be solved by some scope device
     // somehow
-    B = list_1.makeList(defs_1.symbol(defs_1.FUNCTION), B, A);
+    B = list_1.makeList(symbol_1.symbol(defs_1.FUNCTION), B, A);
     symbol_1.set_binding(F, B);
     // return value is nil
-    symbol_1.push_symbol(defs_1.NIL);
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.define_user_function = define_user_function;
 function Eval_function_reference(p1) {
-    stack_1.push(p1);
+    return p1;
 }
 exports.Eval_function_reference = Eval_function_reference;

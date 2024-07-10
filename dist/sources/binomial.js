@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_binomial = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
@@ -22,8 +21,7 @@ const multiply_1 = require("./multiply");
 function Eval_binomial(p1) {
     const N = eval_1.Eval(defs_1.cadr(p1));
     const K = eval_1.Eval(defs_1.caddr(p1));
-    const result = binomial(N, K);
-    stack_1.push(result);
+    return binomial(N, K);
 }
 exports.Eval_binomial = Eval_binomial;
 function binomial(N, K) {

@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.conjugate = exports.Eval_conj = void 0;
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
-const stack_1 = require("../runtime/stack");
 const clock_1 = require("./clock");
 const eval_1 = require("./eval");
 const multiply_1 = require("./multiply");
@@ -28,10 +27,10 @@ function Eval_conj(p1) {
     p1 = eval_1.Eval(defs_1.cadr(p1));
     if (!find_1.Find(p1, defs_1.Constants.imaginaryunit)) {
         // example: (-1)^(1/3)
-        stack_1.push(clock_1.clockform(conjugate(polar_1.polar(p1))));
+        return clock_1.clockform(conjugate(polar_1.polar(p1)));
     }
     else {
-        stack_1.push(conjugate(p1));
+        return conjugate(p1);
     }
 }
 exports.Eval_conj = Eval_conj;

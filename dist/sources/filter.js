@@ -4,7 +4,6 @@ exports.filter = exports.Eval_filter = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
-const stack_1 = require("../runtime/stack");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
 /*
@@ -20,7 +19,7 @@ function Eval_filter(p1) {
     if (defs_1.iscons(p1)) {
         result = p1.tail().reduce((acc, p) => filter(acc, eval_1.Eval(p)), result);
     }
-    stack_1.push(result);
+    return result;
 }
 exports.Eval_filter = Eval_filter;
 function filter(F, X) {

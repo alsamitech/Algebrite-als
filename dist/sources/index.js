@@ -4,23 +4,20 @@ exports.set_component = exports.index_function = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const bignum_1 = require("./bignum");
 const tensor_1 = require("./tensor");
 // n is the total number of things on the stack. The first thing on the stack
 // is the object to be indexed, followed by the indices themselves.
 // called by Eval_index
-function index_function(stack) {
-    const s = 0;
-    let p1 = stack[s];
+function index_function(p1, indices) {
     const { ndim } = p1.tensor;
-    const m = stack.length - 1;
+    const m = indices.length;
     if (m > ndim) {
         run_1.stop('too many indices for tensor');
     }
     let k = 0;
     for (let i = 0; i < m; i++) {
-        const t = bignum_1.nativeInt(stack[s + i + 1]);
+        const t = bignum_1.nativeInt(indices[i]);
         if (t < 1 || t > p1.tensor.dim[i]) {
             run_1.stop('index out of range');
         }
@@ -42,43 +39,22 @@ function index_function(stack) {
     return p2;
 }
 exports.index_function = index_function;
-//-----------------------------------------------------------------------------
-//
-//  Input:    n    Number of args on stack
-//
-//      tos-n    Right-hand value
-//
-//      tos-n+1    Left-hand value
-//
-//      tos-n+2    First index
-//
-//      .
-//      .
-//      .
-//
-//      tos-1    Last index
-//
-//  Output:    Result on stack
-//
-//-----------------------------------------------------------------------------
-function set_component(n) {
-    if (n < 3) {
+function set_component(RVALUE, ...args) {
+    if (args.length < 2) {
         run_1.stop('error in indexed assign');
     }
-    const s = defs_1.defs.tos - n;
-    const RVALUE = defs_1.defs.stack[s];
-    let LVALUE = defs_1.defs.stack[s + 1];
+    let [LVALUE, ...indices] = args;
     if (!defs_1.istensor(LVALUE)) {
         run_1.stop('error in indexed assign: assigning to something that is not a tensor');
     }
     const { ndim } = LVALUE.tensor;
-    const m = n - 2;
+    const m = indices.length;
     if (m > ndim) {
         run_1.stop('error in indexed assign');
     }
     let k = 0;
     for (let i = 0; i < m; i++) {
-        const t = bignum_1.nativeInt(defs_1.defs.stack[s + i + 2]);
+        const t = bignum_1.nativeInt(indices[i]);
         if (t < 1 || t > LVALUE.tensor.dim[i]) {
             run_1.stop('error in indexed assign\n');
         }
@@ -101,9 +77,7 @@ function set_component(n) {
         }
         LVALUE.tensor.elem[k] = RVALUE;
         tensor_1.check_tensor_dimensions(LVALUE);
-        stack_1.moveTos(defs_1.defs.tos - n);
-        stack_1.push(LVALUE);
-        return;
+        return LVALUE;
     }
     // see if the rvalue matches
     if (!defs_1.istensor(RVALUE)) {
@@ -123,7 +97,6 @@ function set_component(n) {
     }
     tensor_1.check_tensor_dimensions(LVALUE);
     tensor_1.check_tensor_dimensions(RVALUE);
-    stack_1.moveTos(defs_1.defs.tos - n);
-    stack_1.push(LVALUE);
+    return LVALUE;
 }
 exports.set_component = set_component;

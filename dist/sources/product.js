@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_product = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -25,14 +24,12 @@ function Eval_product(p1) {
     // 3rd arg (lower limit)
     const j = eval_1.evaluate_integer(defs_1.cadddr(p1));
     if (isNaN(j)) {
-        stack_1.push(p1);
-        return;
+        return p1;
     }
     // 4th arg (upper limit)
     const k = eval_1.evaluate_integer(defs_1.caddddr(p1));
     if (isNaN(k)) {
-        stack_1.push(p1);
-        return;
+        return p1;
     }
     // remember contents of the index
     // variable so we can put it back after the loop
@@ -41,15 +38,16 @@ function Eval_product(p1) {
     for (let i = j; i <= k; i++) {
         symbol_1.set_binding(indexVariable, bignum_1.integer(i));
         const arg2 = eval_1.Eval(body);
-        temp = multiply_1.multiply(temp, arg2);
+        const temp2 = multiply_1.multiply(temp, arg2);
         if (defs_1.DEBUG) {
             console.log(`product - factor 1: ${arg2}`);
             console.log(`product - factor 2: ${temp}`);
-            console.log(`product - result: ${stack_1.top()}`);
+            console.log(`product - result: ${temp2}`);
         }
+        temp = temp2;
     }
-    stack_1.push(temp);
     // put back the index variable to original content
     symbol_1.set_binding(indexVariable, oldIndexVariableValue);
+    return temp;
 }
 exports.Eval_product = Eval_product;

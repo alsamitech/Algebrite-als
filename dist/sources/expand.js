@@ -4,7 +4,7 @@ exports.Eval_expand = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -34,11 +34,10 @@ const tensor_1 = require("./tensor");
 //        2     x     x + 1
 //       x
 function Eval_expand(p1) {
-    const top = eval_1.Eval(defs_1.cadr(p1));
+    const F = eval_1.Eval(defs_1.cadr(p1));
     const p2 = eval_1.Eval(defs_1.caddr(p1));
-    const X = p2 === defs_1.symbol(defs_1.NIL) ? guess_1.guess(top) : p2;
-    const F = top;
-    stack_1.push(expand(F, X));
+    const X = p2 === symbol_1.symbol(defs_1.NIL) ? guess_1.guess(F) : p2;
+    return expand(F, X);
 }
 exports.Eval_expand = Eval_expand;
 //define A p2

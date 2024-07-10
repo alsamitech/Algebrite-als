@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_tanh = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
@@ -11,12 +11,11 @@ const list_1 = require("./list");
 //  tanh(x) = --------------
 //             exp(2 x) + 1
 function Eval_tanh(p1) {
-    const result = tanh(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return tanh(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_tanh = Eval_tanh;
 function tanh(p1) {
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.ARCTANH)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.ARCTANH)) {
         return defs_1.cadr(p1);
     }
     if (defs_1.isdouble(p1)) {
@@ -29,5 +28,5 @@ function tanh(p1) {
     if (is_1.isZeroAtomOrTensor(p1)) {
         return defs_1.Constants.zero;
     }
-    return list_1.makeList(defs_1.symbol(defs_1.TANH), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.TANH), p1);
 }

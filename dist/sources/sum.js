@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_sum = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -15,11 +14,6 @@ const eval_1 = require("./eval");
 //define X p6
 // leaves the sum at the top of the stack
 function Eval_sum(p1) {
-    const result = _sum(p1);
-    stack_1.push(result);
-}
-exports.Eval_sum = Eval_sum;
-function _sum(p1) {
     // 1st arg
     const body = defs_1.cadr(p1);
     // 2nd arg (index)
@@ -49,3 +43,4 @@ function _sum(p1) {
     symbol_1.set_binding(indexVariable, p4);
     return temp;
 }
+exports.Eval_sum = Eval_sum;

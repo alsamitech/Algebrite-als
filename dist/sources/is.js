@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.isnpi = exports.isquarterturn = exports.isimaginaryunit = exports.isfloating = exports.isMinusSqrtThreeOverTwo = exports.isSqrtThreeOverTwo = exports.isminusoneoversqrttwo = exports.isoneoversqrttwo = exports.isminusoneovertwo = exports.isoneovertwo = exports.equalq = exports.equaln = exports.isfraction = exports.isoneover = exports.isNumberOneOverSomething = exports.isintegerfactor = exports.issymbolic = exports.isnegative = exports.iseveninteger = exports.iscomplexnumber = exports.iscomplexnumberdouble = exports.isimaginarynumber = exports.isnegativeterm = exports.ispolyexpandedform = exports.isunivarpolyfactoredorexpandedform = exports.isposint = exports.isnonnegativeinteger = exports.isintegerorintegerfloat = exports.isinteger = exports.isone = exports.isminusone = exports.isplusone = exports.isplustwo = exports.ispositivenumber = exports.isnegativenumber = exports.isZeroLikeOrNonZeroLikeOrUndetermined = exports.isZeroAtomOrTensor = exports.isZeroAtom = void 0;
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const abs_1 = require("./abs");
 const bignum_1 = require("./bignum");
@@ -233,11 +234,11 @@ function isunivarpolyfactoredorexpandedform(p, x) {
         x = guess_1.guess(p);
     }
     if (ispolyfactoredorexpandedform(p, x) &&
-        countTrue(find_1.Find(p, defs_1.symbol(defs_1.SYMBOL_X)), find_1.Find(p, defs_1.symbol(defs_1.SYMBOL_Y)), find_1.Find(p, defs_1.symbol(defs_1.SYMBOL_Z))) === 1) {
+        countTrue(find_1.Find(p, symbol_1.symbol(defs_1.SYMBOL_X)), find_1.Find(p, symbol_1.symbol(defs_1.SYMBOL_Y)), find_1.Find(p, symbol_1.symbol(defs_1.SYMBOL_Z))) === 1) {
         return x;
     }
     else {
-        return;
+        return false;
     }
 }
 exports.isunivarpolyfactoredorexpandedform = isunivarpolyfactoredorexpandedform;
@@ -507,7 +508,7 @@ function isSqrtThree(p) {
     return defs_1.ispower(p) && equaln(defs_1.cadr(p), 3) && isoneovertwo(defs_1.caddr(p));
 }
 function isfloating(p) {
-    if (p.k === defs_1.DOUBLE || p === defs_1.symbol(defs_1.FLOATF)) {
+    if (p.k === defs_1.DOUBLE || p === symbol_1.symbol(defs_1.FLOATF)) {
         return true;
     }
     if (defs_1.iscons(p)) {
@@ -533,7 +534,7 @@ function isquarterturn(p) {
         return 0;
     }
     if (misc_1.equal(defs_1.cadr(p), defs_1.Constants.imaginaryunit)) {
-        if (defs_1.caddr(p) !== defs_1.symbol(defs_1.PI)) {
+        if (defs_1.caddr(p) !== symbol_1.symbol(defs_1.PI)) {
             return 0;
         }
         if (misc_1.length(p) !== 3) {
@@ -547,7 +548,7 @@ function isquarterturn(p) {
     if (!misc_1.equal(defs_1.caddr(p), defs_1.Constants.imaginaryunit)) {
         return 0;
     }
-    if (defs_1.cadddr(p) !== defs_1.symbol(defs_1.PI)) {
+    if (defs_1.cadddr(p) !== symbol_1.symbol(defs_1.PI)) {
         return 0;
     }
     if (misc_1.length(p) !== 4) {
@@ -583,12 +584,12 @@ exports.isquarterturn = isquarterturn;
 //  4  1  2  3  1  2  3  4
 function isnpi(p) {
     let n = 0;
-    if (p === defs_1.symbol(defs_1.PI)) {
+    if (p === symbol_1.symbol(defs_1.PI)) {
         return 2;
     }
     if (!defs_1.ismultiply(p) ||
         !defs_1.isNumericAtom(defs_1.cadr(p)) ||
-        defs_1.caddr(p) !== defs_1.symbol(defs_1.PI) ||
+        defs_1.caddr(p) !== symbol_1.symbol(defs_1.PI) ||
         misc_1.length(p) !== 3) {
         return 0;
     }

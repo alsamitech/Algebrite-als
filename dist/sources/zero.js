@@ -3,13 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_zero = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const eval_1 = require("./eval");
 function Eval_zero(p1) {
-    stack_1.push(_zero(p1));
-}
-exports.Eval_zero = Eval_zero;
-function _zero(p1) {
     const k = Array(defs_1.MAXDIM).fill(0);
     let m = 1;
     let n = 0;
@@ -34,3 +29,4 @@ function _zero(p1) {
     }
     return p1;
 }
+exports.Eval_zero = Eval_zero;

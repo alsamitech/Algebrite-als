@@ -15,6 +15,7 @@ const mpow_1 = require("./mpow");
 const mroot_1 = require("./mroot");
 const multiply_1 = require("./multiply");
 const quickfactor_1 = require("./quickfactor");
+const symbol_1 = require("../runtime/symbol");
 // Rational power function
 function qpow(base, expo) {
     return qpowf(base, expo);
@@ -49,7 +50,7 @@ function qpowf(BASE, EXPO) {
         expo = bignum_1.nativeInt(EXPO);
         if (isNaN(expo)) {
             // expo greater than 32 bits
-            return list_1.makeList(defs_1.symbol(defs_1.POWER), BASE, EXPO);
+            return list_1.makeList(symbol_1.symbol(defs_1.POWER), BASE, EXPO);
         }
         x = mpow_1.mpow(BASE.q.a, Math.abs(expo));
         y = mpow_1.mpow(BASE.q.b, Math.abs(expo));
@@ -82,12 +83,12 @@ function qpowf(BASE, EXPO) {
     }
     // At this point BASE is a positive integer and EXPO is not an integer.
     if (!bignum_1.isSmall(EXPO.q.a) || !bignum_1.isSmall(EXPO.q.b)) {
-        return list_1.makeList(defs_1.symbol(defs_1.POWER), BASE, EXPO);
+        return list_1.makeList(symbol_1.symbol(defs_1.POWER), BASE, EXPO);
     }
     const { a, b } = EXPO.q;
     x = mroot_1.mroot(BASE.q.a, b.toJSNumber());
     if (x === 0) {
-        return list_1.makeList(defs_1.symbol(defs_1.POWER), BASE, EXPO);
+        return list_1.makeList(symbol_1.symbol(defs_1.POWER), BASE, EXPO);
     }
     y = mpow_1.mpow(x, a);
     return EXPO.q.a.isNegative() ? new defs_1.Num(big_integer_1.default.one, y) : new defs_1.Num(y);
@@ -140,7 +141,7 @@ function normalize_angle(A) {
     // remainder (always positive)
     let R = add_1.subtract(A, Q);
     // remainder becomes new angle
-    let result = list_1.makeList(defs_1.symbol(defs_1.POWER), defs_1.Constants.negOne, R);
+    let result = list_1.makeList(symbol_1.symbol(defs_1.POWER), defs_1.Constants.negOne, R);
     // negate if quotient is odd
     if (Q.q.a.isOdd()) {
         result = multiply_1.negate(result);

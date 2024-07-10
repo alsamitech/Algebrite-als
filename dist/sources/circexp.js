@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_circexp = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -29,31 +29,31 @@ Returns expression x with circular and hyperbolic functions converted to exponen
 */
 function Eval_circexp(p1) {
     const result = circexp(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(eval_1.Eval(result));
+    return eval_1.Eval(result);
 }
 exports.Eval_circexp = Eval_circexp;
 function circexp(p1) {
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.COS)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.COS)) {
         return expcos_1.expcos(defs_1.cadr(p1));
     }
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.SIN)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.SIN)) {
         return expsin_1.expsin(defs_1.cadr(p1));
     }
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.TAN)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.TAN)) {
         p1 = defs_1.cadr(p1);
         const p2 = misc_1.exponential(multiply_1.multiply(defs_1.Constants.imaginaryunit, p1));
         const p3 = misc_1.exponential(multiply_1.negate(multiply_1.multiply(defs_1.Constants.imaginaryunit, p1)));
         return multiply_1.divide(multiply_1.multiply(add_1.subtract(p3, p2), defs_1.Constants.imaginaryunit), add_1.add(p2, p3));
     }
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.COSH)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.COSH)) {
         p1 = defs_1.cadr(p1);
         return multiply_1.multiply(add_1.add(misc_1.exponential(p1), misc_1.exponential(multiply_1.negate(p1))), bignum_1.rational(1, 2));
     }
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.SINH)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.SINH)) {
         p1 = defs_1.cadr(p1);
         return multiply_1.multiply(add_1.subtract(misc_1.exponential(p1), misc_1.exponential(multiply_1.negate(p1))), bignum_1.rational(1, 2));
     }
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.TANH)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.TANH)) {
         p1 = misc_1.exponential(multiply_1.multiply(defs_1.cadr(p1), bignum_1.integer(2)));
         return multiply_1.divide(add_1.subtract(p1, defs_1.Constants.one), add_1.add(p1, defs_1.Constants.one));
     }

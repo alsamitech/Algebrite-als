@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.transform = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bake_1 = require("./bake");
@@ -51,7 +50,7 @@ function transform(F, X, s, generalTransform) {
         console.log(`         !!!!!!!!!   transform on: ${F}`);
     }
     const state = saveMetaBindings();
-    symbol_1.set_binding(defs_1.symbol(defs_1.METAX), X);
+    symbol_1.set_binding(symbol_1.symbol(defs_1.METAX), X);
     const arg = bake_1.polyform(F, X); // collect coefficients of x, x^2, etc.
     const result = decomp_1.decomp(generalTransform, arg, X);
     if (defs_1.DEBUG) {
@@ -91,11 +90,11 @@ function transform(F, X, s, generalTransform) {
             // use scan_meta because the pattern is not a string
             // that we have to parse, it's a tree already.
             // replace a_ with METAA in the passed transformation
-            let expr = subst_1.subst(theTransform, defs_1.symbol(defs_1.SYMBOL_A_UNDERSCORE), defs_1.symbol(defs_1.METAA));
+            let expr = subst_1.subst(theTransform, symbol_1.symbol(defs_1.SYMBOL_A_UNDERSCORE), symbol_1.symbol(defs_1.METAA));
             // replace b_ with METAB in the passed transformation
-            expr = subst_1.subst(expr, defs_1.symbol(defs_1.SYMBOL_B_UNDERSCORE), defs_1.symbol(defs_1.METAB));
+            expr = subst_1.subst(expr, symbol_1.symbol(defs_1.SYMBOL_B_UNDERSCORE), symbol_1.symbol(defs_1.METAB));
             // replace x_ with METAX in the passed transformation
-            const p1 = subst_1.subst(expr, defs_1.symbol(defs_1.SYMBOL_X_UNDERSCORE), defs_1.symbol(defs_1.METAX));
+            const p1 = subst_1.subst(expr, symbol_1.symbol(defs_1.SYMBOL_X_UNDERSCORE), symbol_1.symbol(defs_1.METAX));
             const A = defs_1.car(p1);
             if (defs_1.DEBUG) {
                 console.log(`template expression: ${A}`);
@@ -123,11 +122,10 @@ function transform(F, X, s, generalTransform) {
                     const secondTerm = defs_1.car(restTerm);
                     restTerm = defs_1.cdr(restTerm);
                     if (defs_1.DEBUG) {
-                        console.log('tos before recursive transform: ' + defs_1.defs.tos);
                         console.log(`testing: ${secondTerm}`);
                         console.log(`about to try to simplify other term: ${secondTerm}`);
                     }
-                    const [t, success] = transform(secondTerm, defs_1.symbol(defs_1.NIL), s, generalTransform);
+                    const [t, success] = transform(secondTerm, symbol_1.symbol(defs_1.NIL), s, generalTransform);
                     transformationSuccessful = transformationSuccessful || success;
                     transformedTerms.push(t);
                     if (defs_1.DEBUG) {
@@ -152,8 +150,7 @@ function transform(F, X, s, generalTransform) {
                 }
             }
             if (eachTransformEntry) {
-                scan_1.scan_meta(eachTransformEntry);
-                const temp = stack_1.pop();
+                const temp = scan_1.scan_meta(eachTransformEntry);
                 const p5 = defs_1.cadr(temp);
                 B = defs_1.caddr(temp);
                 const p7 = defs_1.cdddr(temp);
@@ -169,34 +166,34 @@ function transform(F, X, s, generalTransform) {
         ? eval_1.Eval(B)
         : generalTransform
             ? F
-            : defs_1.symbol(defs_1.NIL);
+            : symbol_1.symbol(defs_1.NIL);
     restoreMetaBindings(state);
     return [temp, transformationSuccessful];
 }
 exports.transform = transform;
 function saveMetaBindings() {
     return {
-        METAA: symbol_1.get_binding(defs_1.symbol(defs_1.METAA)),
-        METAB: symbol_1.get_binding(defs_1.symbol(defs_1.METAB)),
-        METAX: symbol_1.get_binding(defs_1.symbol(defs_1.METAX)),
+        METAA: symbol_1.get_binding(symbol_1.symbol(defs_1.METAA)),
+        METAB: symbol_1.get_binding(symbol_1.symbol(defs_1.METAB)),
+        METAX: symbol_1.get_binding(symbol_1.symbol(defs_1.METAX)),
     };
 }
 function restoreMetaBindings(state) {
-    symbol_1.set_binding(defs_1.symbol(defs_1.METAX), state.METAX);
-    symbol_1.set_binding(defs_1.symbol(defs_1.METAB), state.METAB);
-    symbol_1.set_binding(defs_1.symbol(defs_1.METAA), state.METAA);
+    symbol_1.set_binding(symbol_1.symbol(defs_1.METAX), state.METAX);
+    symbol_1.set_binding(symbol_1.symbol(defs_1.METAB), state.METAB);
+    symbol_1.set_binding(symbol_1.symbol(defs_1.METAA), state.METAA);
 }
 // search for a METAA and METAB such that F = A
 function f_equals_a(stack, generalTransform, F, A, C) {
     for (const fea_i of stack) {
-        symbol_1.set_binding(defs_1.symbol(defs_1.METAA), fea_i);
+        symbol_1.set_binding(symbol_1.symbol(defs_1.METAA), fea_i);
         if (defs_1.DEBUG) {
-            console.log(`  binding METAA to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAA))}`);
+            console.log(`  binding METAA to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAA))}`);
         }
         for (const fea_j of stack) {
-            symbol_1.set_binding(defs_1.symbol(defs_1.METAB), fea_j);
+            symbol_1.set_binding(symbol_1.symbol(defs_1.METAB), fea_j);
             if (defs_1.DEBUG) {
-                console.log(`  binding METAB to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAB))}`);
+                console.log(`  binding METAB to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAB))}`);
             }
             // now test all the conditions (it's an and between them)
             let temp = C;
@@ -213,14 +210,14 @@ function f_equals_a(stack, generalTransform, F, A, C) {
             }
             const arg2 = generalTransform ? defs_1.noexpand(eval_1.Eval, A) : eval_1.Eval(A);
             if (defs_1.DEBUG) {
-                console.log(`about to evaluate template expression: ${A} binding METAA to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAA))} and binding METAB to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAB))} and binding METAX to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAX))}`);
+                console.log(`about to evaluate template expression: ${A} binding METAA to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAA))} and binding METAB to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAB))} and binding METAX to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAX))}`);
                 console.log(`  comparing ${arg2} to: ${F}`);
             }
             if (is_1.isZeroAtomOrTensor(add_1.subtract(F, arg2))) {
                 if (defs_1.DEBUG) {
-                    console.log(`binding METAA to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAA))}`);
-                    console.log(`binding METAB to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAB))}`);
-                    console.log(`binding METAX to ${symbol_1.get_binding(defs_1.symbol(defs_1.METAX))}`);
+                    console.log(`binding METAA to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAA))}`);
+                    console.log(`binding METAB to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAB))}`);
+                    console.log(`binding METAX to ${symbol_1.get_binding(symbol_1.symbol(defs_1.METAX))}`);
                     console.log(`comparing ${F} to: ${A}`);
                 }
                 return true; // yes

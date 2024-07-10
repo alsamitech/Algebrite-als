@@ -6,6 +6,7 @@ const misc_1 = require("../sources/misc");
 const bignum_1 = require("./bignum");
 const list_1 = require("./list");
 const multiply_1 = require("./multiply");
+const symbol_1 = require("../runtime/symbol");
 //-----------------------------------------------------------------------------
 //
 //  Create a Hilbert matrix
@@ -24,7 +25,7 @@ const multiply_1 = require("./multiply");
 function hilbert(N) {
     const n = bignum_1.nativeInt(N);
     if (n < 2) {
-        return list_1.makeList(defs_1.symbol(defs_1.HILBERT), N);
+        return list_1.makeList(symbol_1.symbol(defs_1.HILBERT), N);
     }
     const A = misc_1.zero_matrix(n, n);
     for (let i = 0; i < n; i++) {

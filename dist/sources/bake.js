@@ -6,37 +6,38 @@ const bignum_1 = require("./bignum");
 const coeff_1 = require("./coeff");
 const is_1 = require("./is");
 const list_1 = require("./list");
+const symbol_1 = require("../runtime/symbol");
 function bake(p1) {
     return defs_1.doexpand(_bake, p1);
 }
 exports.bake = bake;
 function _bake(p1) {
-    const s = is_1.ispolyexpandedform(p1, defs_1.symbol(defs_1.SYMBOL_S));
-    const t = is_1.ispolyexpandedform(p1, defs_1.symbol(defs_1.SYMBOL_T));
-    const x = is_1.ispolyexpandedform(p1, defs_1.symbol(defs_1.SYMBOL_X));
-    const y = is_1.ispolyexpandedform(p1, defs_1.symbol(defs_1.SYMBOL_Y));
-    const z = is_1.ispolyexpandedform(p1, defs_1.symbol(defs_1.SYMBOL_Z));
+    const s = is_1.ispolyexpandedform(p1, symbol_1.symbol(defs_1.SYMBOL_S));
+    const t = is_1.ispolyexpandedform(p1, symbol_1.symbol(defs_1.SYMBOL_T));
+    const x = is_1.ispolyexpandedform(p1, symbol_1.symbol(defs_1.SYMBOL_X));
+    const y = is_1.ispolyexpandedform(p1, symbol_1.symbol(defs_1.SYMBOL_Y));
+    const z = is_1.ispolyexpandedform(p1, symbol_1.symbol(defs_1.SYMBOL_Z));
     let result;
     if (s && !t && !x && !y && !z) {
-        result = bake_poly(p1, defs_1.symbol(defs_1.SYMBOL_S));
+        result = bake_poly(p1, symbol_1.symbol(defs_1.SYMBOL_S));
     }
     else if (!s && t && !x && !y && !z) {
-        result = bake_poly(p1, defs_1.symbol(defs_1.SYMBOL_T));
+        result = bake_poly(p1, symbol_1.symbol(defs_1.SYMBOL_T));
     }
     else if (!s && !t && x && !y && !z) {
-        result = bake_poly(p1, defs_1.symbol(defs_1.SYMBOL_X));
+        result = bake_poly(p1, symbol_1.symbol(defs_1.SYMBOL_X));
     }
     else if (!s && !t && !x && y && !z) {
-        result = bake_poly(p1, defs_1.symbol(defs_1.SYMBOL_Y));
+        result = bake_poly(p1, symbol_1.symbol(defs_1.SYMBOL_Y));
     }
     else if (!s && !t && !x && !y && z) {
-        result = bake_poly(p1, defs_1.symbol(defs_1.SYMBOL_Z));
+        result = bake_poly(p1, symbol_1.symbol(defs_1.SYMBOL_Z));
         // don't bake the contents of some constructs such as "for"
         // because we don't want to evaluate the body of
         // such constructs "statically", i.e. without fully running
         // the loops.
     }
-    else if (defs_1.iscons(p1) && defs_1.car(p1) !== defs_1.symbol(defs_1.FOR)) {
+    else if (defs_1.iscons(p1) && defs_1.car(p1) !== symbol_1.symbol(defs_1.FOR)) {
         result = list_1.makeList(defs_1.car(p1), ...p1.tail().map(bake));
     }
     else {
@@ -62,7 +63,7 @@ function bake_poly(poly, x) {
         result.push(...bake_poly_term(i, term, x));
     }
     if (result.length > 1) {
-        return new defs_1.Cons(defs_1.symbol(defs_1.ADD), list_1.makeList(...result));
+        return new defs_1.Cons(symbol_1.symbol(defs_1.ADD), list_1.makeList(...result));
     }
     return result[0];
 }
@@ -92,10 +93,10 @@ function bake_poly_term(k, coefficient, term) {
         result.push(term);
     }
     else {
-        result.push(list_1.makeList(defs_1.symbol(defs_1.POWER), term, bignum_1.integer(k)));
+        result.push(list_1.makeList(symbol_1.symbol(defs_1.POWER), term, bignum_1.integer(k)));
     }
     if (result.length > 1) {
-        return [list_1.makeList(defs_1.symbol(defs_1.MULTIPLY), ...result)];
+        return [list_1.makeList(symbol_1.symbol(defs_1.MULTIPLY), ...result)];
     }
     return result;
 }

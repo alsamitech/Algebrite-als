@@ -4,7 +4,7 @@ exports.transpose = exports.Eval_transpose = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -18,11 +18,11 @@ function Eval_transpose(p1) {
     const arg1 = eval_1.Eval(defs_1.cadr(p1));
     let arg2 = defs_1.Constants.one;
     let arg3 = bignum_1.integer(2);
-    if (defs_1.cddr(p1) !== defs_1.symbol(defs_1.NIL)) {
+    if (defs_1.cddr(p1) !== symbol_1.symbol(defs_1.NIL)) {
         arg2 = eval_1.Eval(defs_1.caddr(p1));
         arg3 = eval_1.Eval(defs_1.cadddr(p1));
     }
-    stack_1.push(transpose(arg1, arg2, arg3));
+    return transpose(arg1, arg2, arg3);
 }
 exports.Eval_transpose = Eval_transpose;
 // by default p3 is 2 and p2 is 1
@@ -50,8 +50,8 @@ function transpose(p1, p2, p3) {
         const innerTranspSwitch2 = defs_1.car(defs_1.cdr(defs_1.cdr(defs_1.cdr(p1))));
         if ((misc_1.equal(innerTranspSwitch1, p3) && misc_1.equal(innerTranspSwitch2, p2)) ||
             (misc_1.equal(innerTranspSwitch2, p3) && misc_1.equal(innerTranspSwitch1, p2)) ||
-            (misc_1.equal(innerTranspSwitch1, defs_1.symbol(defs_1.NIL)) &&
-                misc_1.equal(innerTranspSwitch2, defs_1.symbol(defs_1.NIL)) &&
+            (misc_1.equal(innerTranspSwitch1, symbol_1.symbol(defs_1.NIL)) &&
+                misc_1.equal(innerTranspSwitch2, symbol_1.symbol(defs_1.NIL)) &&
                 ((is_1.isplusone(p3) && is_1.isplustwo(p2)) || (is_1.isplusone(p2) && is_1.isplustwo(p3))))) {
             return defs_1.car(defs_1.cdr(p1));
         }
@@ -79,7 +79,7 @@ function transpose(p1, p2, p3) {
             accumulator.push(...p1.tail().map((p) => [p, p2, p3]));
         }
         accumulator.reverse();
-        return accumulator.reduce((acc, p) => inner_1.inner(acc, transpose(p[0], p[1], p[2])), defs_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX));
+        return accumulator.reduce((acc, p) => inner_1.inner(acc, transpose(p[0], p[1], p[2])), symbol_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX));
     }
     if (!defs_1.istensor(p1)) {
         if (!is_1.isZeroAtomOrTensor(p1)) {
@@ -88,9 +88,9 @@ function transpose(p1, p2, p3) {
             // parameters
             if ((!is_1.isplusone(p2) || !is_1.isplustwo(p3)) &&
                 (!is_1.isplusone(p3) || !is_1.isplustwo(p2))) {
-                return list_1.makeList(defs_1.symbol(defs_1.TRANSPOSE), p1, p2, p3);
+                return list_1.makeList(symbol_1.symbol(defs_1.TRANSPOSE), p1, p2, p3);
             }
-            return list_1.makeList(defs_1.symbol(defs_1.TRANSPOSE), p1);
+            return list_1.makeList(symbol_1.symbol(defs_1.TRANSPOSE), p1);
         }
         return defs_1.Constants.zero;
     }

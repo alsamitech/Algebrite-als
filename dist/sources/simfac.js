@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.simfac = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
@@ -38,8 +38,7 @@ Then simplify the sum to get
 */
 // simplify factorials term-by-term
 function Eval_simfac(p1) {
-    const result = simfac(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return simfac(eval_1.Eval(defs_1.cadr(p1)));
 }
 //if 1
 function simfac(p1) {
@@ -118,7 +117,7 @@ function yysimfac(stack) {
             //  n / n!    ->  1 / (n - 1)!
             if (defs_1.ispower(p2) &&
                 is_1.isminusone(defs_1.caddr(p2)) &&
-                defs_1.caadr(p2) === defs_1.symbol(defs_1.FACTORIAL) &&
+                defs_1.caadr(p2) === symbol_1.symbol(defs_1.FACTORIAL) &&
                 misc_1.equal(p1, defs_1.cadadr(p2))) {
                 stack[i] = multiply_1.reciprocate(factorial_1.factorial(add_1.add(p1, defs_1.Constants.negOne)));
                 stack[j] = defs_1.Constants.one;
@@ -138,7 +137,7 @@ function yysimfac(stack) {
                 is_1.isminusone(defs_1.caddr(p1)) &&
                 defs_1.ispower(p2) &&
                 is_1.isminusone(defs_1.caddr(p2)) &&
-                defs_1.caadr(p2) === defs_1.symbol(defs_1.FACTORIAL)) {
+                defs_1.caadr(p2) === symbol_1.symbol(defs_1.FACTORIAL)) {
                 const p3 = add_1.subtract(defs_1.cadr(p1), defs_1.cadr(defs_1.cadr(p2)));
                 if (is_1.isplusone(p3)) {
                     stack[i] = multiply_1.reciprocate(factorial_1.factorial(defs_1.cadr(p1)));
@@ -151,7 +150,7 @@ function yysimfac(stack) {
             if (defs_1.isfactorial(p1) &&
                 defs_1.ispower(p2) &&
                 is_1.isminusone(defs_1.caddr(p2)) &&
-                defs_1.caadr(p2) === defs_1.symbol(defs_1.FACTORIAL)) {
+                defs_1.caadr(p2) === symbol_1.symbol(defs_1.FACTORIAL)) {
                 const p3 = add_1.subtract(defs_1.cadr(p1), defs_1.cadr(defs_1.cadr(p2)));
                 if (is_1.isplusone(p3)) {
                     stack[i] = defs_1.cadr(p1);

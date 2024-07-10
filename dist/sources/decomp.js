@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.decomp = exports.Eval_decomp = void 0;
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
@@ -26,9 +26,9 @@ function Eval_decomp(p1) {
     console.log('Eval_decomp is being called!!!!!!!!!!!!!!!!!!!!');
     const arg = eval_1.Eval(defs_1.cadr(p1));
     p1 = eval_1.Eval(defs_1.caddr(p1));
-    const variable = p1 === defs_1.symbol(defs_1.NIL) ? guess_1.guess(arg) : p1;
+    const variable = p1 === symbol_1.symbol(defs_1.NIL) ? guess_1.guess(arg) : p1;
     const result = decomp(false, arg, variable);
-    stack_1.push(list_1.makeList(defs_1.symbol(defs_1.NIL), ...result));
+    return list_1.makeList(symbol_1.symbol(defs_1.NIL), ...result);
 }
 exports.Eval_decomp = Eval_decomp;
 function pushTryNotToDuplicateLocal(localStack, item) {

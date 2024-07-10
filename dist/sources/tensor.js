@@ -4,7 +4,7 @@ exports.copy_tensor = exports.power_tensor = exports.compare_tensors = exports.d
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -86,10 +86,10 @@ function Eval_tensor(a) {
     //
     //---------------------------------------------------------------------
     check_tensor_dimensions(b);
-    b.tensor.elem = a.tensor.elem.map((el) => eval_1.Eval(el));
+    b.tensor.elem = a.tensor.elem.map(eval_1.Eval);
     check_tensor_dimensions(a);
     check_tensor_dimensions(b);
-    stack_1.push(promote_tensor(b));
+    return promote_tensor(b);
 }
 exports.Eval_tensor = Eval_tensor;
 //-----------------------------------------------------------------------------
@@ -104,10 +104,10 @@ exports.Eval_tensor = Eval_tensor;
 function tensor_plus_tensor(p1, p2) {
     // are the dimension lists equal?
     if (p1.tensor.ndim !== p2.tensor.ndim) {
-        return defs_1.symbol(defs_1.NIL);
+        return symbol_1.symbol(defs_1.NIL);
     }
     if (p1.tensor.dim.some((n, i) => n !== p2.tensor.dim[i])) {
-        return defs_1.symbol(defs_1.NIL);
+        return symbol_1.symbol(defs_1.NIL);
     }
     // create a new tensor for the result
     const { nelem, ndim } = p1.tensor;
@@ -167,7 +167,7 @@ function d_tensor_tensor(p1, p2) {
     //U **a, **b, **c
     const { ndim, nelem } = p1.tensor;
     if (ndim + 1 >= defs_1.MAXDIM) {
-        return list_1.makeList(defs_1.symbol(defs_1.DERIVATIVE), p1, p2);
+        return list_1.makeList(symbol_1.symbol(defs_1.DERIVATIVE), p1, p2);
     }
     const p3 = alloc_1.alloc_tensor(nelem * p2.tensor.nelem);
     p3.tensor.ndim = ndim + 1;
@@ -252,11 +252,11 @@ function power_tensor(p1, p2) {
     // first and last dims must be equal
     let k = p1.tensor.ndim - 1;
     if (p1.tensor.dim[0] !== p1.tensor.dim[k]) {
-        return list_1.makeList(defs_1.symbol(defs_1.POWER), p1, p2);
+        return list_1.makeList(symbol_1.symbol(defs_1.POWER), p1, p2);
     }
     let n = bignum_1.nativeInt(p2);
     if (isNaN(n)) {
-        return list_1.makeList(defs_1.symbol(defs_1.POWER), p1, p2);
+        return list_1.makeList(symbol_1.symbol(defs_1.POWER), p1, p2);
     }
     if (n === 0) {
         if (p1.tensor.ndim !== 2) {

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.arctan = exports.Eval_arctan = void 0;
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const bignum_1 = require("./bignum");
 const denominator_1 = require("./denominator");
@@ -28,11 +28,11 @@ Returns the inverse tangent of x.
 
 */
 function Eval_arctan(x) {
-    stack_1.push(arctan(eval_1.Eval(defs_1.cadr(x))));
+    return arctan(eval_1.Eval(defs_1.cadr(x)));
 }
 exports.Eval_arctan = Eval_arctan;
 function arctan(x) {
-    if (defs_1.car(x) === defs_1.symbol(defs_1.TAN)) {
+    if (defs_1.car(x) === symbol_1.symbol(defs_1.TAN)) {
         return defs_1.cadr(x);
     }
     if (defs_1.isdouble(x)) {
@@ -45,11 +45,11 @@ function arctan(x) {
         return multiply_1.negate(arctan(multiply_1.negate(x)));
     }
     // arctan(sin(a) / cos(a)) ?
-    if (find_1.Find(x, defs_1.symbol(defs_1.SIN)) && find_1.Find(x, defs_1.symbol(defs_1.COS))) {
+    if (find_1.Find(x, symbol_1.symbol(defs_1.SIN)) && find_1.Find(x, symbol_1.symbol(defs_1.COS))) {
         const p2 = numerator_1.numerator(x);
         const p3 = denominator_1.denominator(x);
-        if (defs_1.car(p2) === defs_1.symbol(defs_1.SIN) &&
-            defs_1.car(p3) === defs_1.symbol(defs_1.COS) &&
+        if (defs_1.car(p2) === symbol_1.symbol(defs_1.SIN) &&
+            defs_1.car(p3) === symbol_1.symbol(defs_1.COS) &&
             misc_1.equal(defs_1.cadr(p2), defs_1.cadr(p3))) {
             return defs_1.cadr(p2);
         }
@@ -59,7 +59,7 @@ function arctan(x) {
     if ((defs_1.ispower(x) && is_1.equaln(defs_1.cadr(x), 3) && is_1.equalq(defs_1.caddr(x), -1, 2)) ||
         (defs_1.ismultiply(x) &&
             is_1.equalq(defs_1.car(defs_1.cdr(x)), 1, 3) &&
-            defs_1.car(defs_1.car(defs_1.cdr(defs_1.cdr(x)))) === defs_1.symbol(defs_1.POWER) &&
+            defs_1.car(defs_1.car(defs_1.cdr(defs_1.cdr(x)))) === symbol_1.symbol(defs_1.POWER) &&
             is_1.equaln(defs_1.car(defs_1.cdr(defs_1.car(defs_1.cdr(defs_1.cdr(x))))), 3) &&
             is_1.equalq(defs_1.car(defs_1.cdr(defs_1.cdr(defs_1.car(defs_1.cdr(defs_1.cdr(x)))))), 1, 2))) {
         return multiply_1.multiply(bignum_1.rational(1, 6), defs_1.Constants.Pi());
@@ -72,6 +72,6 @@ function arctan(x) {
     if (defs_1.ispower(x) && is_1.equaln(defs_1.cadr(x), 3) && is_1.equalq(defs_1.caddr(x), 1, 2)) {
         return multiply_1.multiply(bignum_1.rational(1, 3), defs_1.Constants.Pi());
     }
-    return list_1.makeList(defs_1.symbol(defs_1.ARCTAN), x);
+    return list_1.makeList(symbol_1.symbol(defs_1.ARCTAN), x);
 }
 exports.arctan = arctan;

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.denominator = exports.Eval_denominator = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
@@ -24,8 +23,7 @@ Returns the denominator of expression x.
 
 */
 function Eval_denominator(p1) {
-    const result = denominator(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return denominator(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_denominator = Eval_denominator;
 function denominator(p1) {

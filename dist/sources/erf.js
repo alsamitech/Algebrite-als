@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_erf = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const erfc_1 = require("./erfc");
 const eval_1 = require("./eval");
@@ -30,8 +30,7 @@ erf(-x)=erf(x)
 
 */
 function Eval_erf(p1) {
-    const result = yerf(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return yerf(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_erf = Eval_erf;
 function yerf(p1) {
@@ -42,7 +41,7 @@ function yerf(p1) {
         return defs_1.Constants.zero;
     }
     if (is_1.isnegativeterm(p1)) {
-        return multiply_1.negate(list_1.makeList(defs_1.symbol(defs_1.ERF), multiply_1.negate(p1)));
+        return multiply_1.negate(list_1.makeList(symbol_1.symbol(defs_1.ERF), multiply_1.negate(p1)));
     }
-    return list_1.makeList(defs_1.symbol(defs_1.ERF), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.ERF), p1);
 }

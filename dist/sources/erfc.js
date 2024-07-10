@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.erfc = exports.Eval_erfc = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
@@ -17,8 +17,7 @@ const list_1 = require("./list");
 //
 //-----------------------------------------------------------------------------
 function Eval_erfc(p1) {
-    const result = yerfc(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return yerfc(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_erfc = Eval_erfc;
 function yerfc(p1) {
@@ -29,7 +28,7 @@ function yerfc(p1) {
     if (is_1.isZeroAtomOrTensor(p1)) {
         return defs_1.Constants.one;
     }
-    return list_1.makeList(defs_1.symbol(defs_1.ERFC), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.ERFC), p1);
 }
 // from Numerical Recipes in C
 function erfc(x) {

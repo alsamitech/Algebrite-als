@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_for = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -33,13 +32,11 @@ function Eval_for(p1) {
     }
     const j = eval_1.evaluate_integer(defs_1.cadddr(p1));
     if (isNaN(j)) {
-        stack_1.push(p1);
-        return;
+        return p1;
     }
     const k = eval_1.evaluate_integer(defs_1.caddddr(p1));
     if (isNaN(k)) {
-        stack_1.push(p1);
-        return;
+        return p1;
     }
     // remember contents of the index
     // variable so we can put it back after the loop
@@ -51,6 +48,6 @@ function Eval_for(p1) {
     // put back the index variable to original content
     symbol_1.set_binding(loopingVariable, p4);
     // return value
-    symbol_1.push_symbol(defs_1.NIL);
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_for = Eval_for;

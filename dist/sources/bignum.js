@@ -3,13 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bignum_factorial = exports.bignum_float = exports.pop_number = exports.nativeDouble = exports.pop_double = exports.gcd_numbers = exports.print_number = exports.bignum_scan_float = exports.bignum_scan_integer = exports.nativeInt = exports.pop_integer = exports.rational = exports.push_rational = exports.double = exports.push_double = exports.integer = exports.push_integer = exports.convert_rational_to_double = exports.bignum_power_number = exports.mp_denominator = exports.mp_numerator = exports.bignum_truncate = exports.negate_number = exports.compare_numbers = exports.invert_number = exports.divide_numbers = exports.multiply_numbers = exports.add_numbers = exports.makePositive = exports.makeSignSameAs = exports.setSignTo = exports.isSmall = exports.mint = void 0;
+exports.bignum_factorial = exports.bignum_float = exports.nativeDouble = exports.gcd_numbers = exports.print_number = exports.bignum_scan_float = exports.bignum_scan_integer = exports.nativeInt = exports.rational = exports.double = exports.integer = exports.convert_rational_to_double = exports.bignum_power_number = exports.mp_denominator = exports.mp_numerator = exports.bignum_truncate = exports.negate_number = exports.compare_numbers = exports.invert_number = exports.divide_numbers = exports.multiply_numbers = exports.add_numbers = exports.makePositive = exports.makeSignSameAs = exports.setSignTo = exports.isSmall = exports.mint = void 0;
 const big_integer_1 = __importDefault(require("big-integer"));
 const defs_1 = require("../runtime/defs");
 const mcmp_1 = require("../runtime/mcmp");
 const otherCFunctions_1 = require("../runtime/otherCFunctions");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const is_1 = require("./is");
 const mgcd_1 = require("./mgcd");
 const mmul_1 = require("./mmul");
@@ -282,41 +281,20 @@ function convert_rational_to_double(p) {
     return result;
 }
 exports.convert_rational_to_double = convert_rational_to_double;
-// n an integer
-function push_integer(n) {
-    if (defs_1.DEBUG) {
-        console.log(`pushing integer ${n}`);
-    }
-    stack_1.push(integer(n));
-}
-exports.push_integer = push_integer;
 function integer(n) {
     return new defs_1.Num(big_integer_1.default(n));
 }
 exports.integer = integer;
-function push_double(d) {
-    stack_1.push(double(d));
-}
-exports.push_double = push_double;
 function double(d) {
     return new defs_1.Double(d);
 }
 exports.double = double;
-function push_rational(a, b) {
-    stack_1.push(rational(a, b));
-}
-exports.push_rational = push_rational;
 function rational(a, b) {
     // `as any as number` cast added because bigInt(number) and bigInt(bigInt.BigInteger)
     // are both accepted signatures, but bigInt(number|bigInt.BigInteger) is not
     return new defs_1.Num(big_integer_1.default(a), big_integer_1.default(b));
 }
 exports.rational = rational;
-function pop_integer() {
-    const p1 = stack_1.pop();
-    return nativeInt(p1);
-}
-exports.pop_integer = pop_integer;
 function nativeInt(p1) {
     let n = NaN;
     switch (p1.k) {
@@ -352,11 +330,11 @@ function bignum_scan_integer(s) {
     if (sign_ === '-') {
         p1 = multiply_1.negate(p1);
     }
-    stack_1.push(p1);
+    return p1;
 }
 exports.bignum_scan_integer = bignum_scan_integer;
 function bignum_scan_float(s) {
-    push_double(parseFloat(s));
+    return double(parseFloat(s));
 }
 exports.bignum_scan_float = bignum_scan_float;
 // gives the capability of printing the unsigned
@@ -413,11 +391,6 @@ function gcd_numbers(p1, p2) {
     return new defs_1.Num(setSignTo(a, 1), b);
 }
 exports.gcd_numbers = gcd_numbers;
-function pop_double() {
-    const p1 = stack_1.pop();
-    return nativeDouble(p1);
-}
-exports.pop_double = pop_double;
 function nativeDouble(p1) {
     let d = 0.0;
     switch (p1.k) {
@@ -433,14 +406,6 @@ function nativeDouble(p1) {
     return d;
 }
 exports.nativeDouble = nativeDouble;
-function pop_number() {
-    const n = stack_1.pop();
-    if (!defs_1.isNumericAtom(n)) {
-        run_1.stop('not a number');
-    }
-    return n;
-}
-exports.pop_number = pop_number;
 function bignum_float(n) {
     const d = convert_rational_to_double(n);
     return new defs_1.Double(d);

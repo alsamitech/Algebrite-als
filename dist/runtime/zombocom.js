@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.exec = exports.parse = void 0;
 const run_1 = require("./run");
-const stack_1 = require("./stack");
 const bignum_1 = require("../sources/bignum");
 const list_1 = require("../sources/list");
 const scan_1 = require("../sources/scan");
@@ -15,31 +14,30 @@ if (!defs_1.defs.inited) {
 }
 function parse_internal(argu) {
     if (typeof argu === 'string') {
-        scan_1.scan(argu);
-        // now its in the stack
+        const [, u] = scan_1.scan(argu);
+        return u;
     }
     else if (typeof argu === 'number') {
         if (argu % 1 === 0) {
-            bignum_1.push_integer(argu);
+            return bignum_1.integer(argu);
         }
         else {
-            bignum_1.push_double(argu);
+            return bignum_1.double(argu);
         }
     }
-    else if (argu instanceof defs_1.BaseAtom) {
+    else if (typeof argu.k === 'number') {
         // hey look its a U
-        stack_1.push(argu);
+        return argu;
     }
     else {
         console.warn('unknown argument type', argu);
-        stack_1.push(defs_1.symbol(defs_1.NIL));
+        return symbol_1.symbol(defs_1.NIL);
     }
 }
 function parse(argu) {
     let data;
     try {
-        parse_internal(argu);
-        data = stack_1.pop();
+        data = parse_internal(argu);
         run_1.check_stack();
     }
     catch (error) {
@@ -56,16 +54,9 @@ function exec(name, ...argus) {
     let result;
     const fn = symbol_1.get_binding(symbol_1.usr_symbol(name));
     run_1.check_stack();
-    stack_1.push(fn);
-    for (let argu of Array.from(argus)) {
-        parse_internal(argu);
-    }
-    list_1.list(1 + argus.length);
-    const p1 = stack_1.pop();
-    stack_1.push(p1);
+    const p1 = list_1.makeList(fn, ...argus.map(parse_internal));
     try {
-        run_1.top_level_eval();
-        result = stack_1.pop();
+        result = run_1.top_level_eval(p1);
         run_1.check_stack();
     }
     catch (error) {

@@ -4,7 +4,7 @@ exports.Eval_nroots = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -51,12 +51,10 @@ for (let initNRoots = 0; initNRoots < NROOTS_YMAX; initNRoots++) {
 function Eval_nroots(p1) {
     let p2 = eval_1.Eval(defs_1.caddr(p1));
     p1 = eval_1.Eval(defs_1.cadr(p1));
-    p2 = p2 === defs_1.symbol(defs_1.NIL) ? guess_1.guess(p1) : p2;
+    p2 = p2 === symbol_1.symbol(defs_1.NIL) ? guess_1.guess(p1) : p2;
     if (!is_1.ispolyexpandedform(p1, p2)) {
         run_1.stop('nroots: polynomial?');
     }
-    // mark the stack
-    const h = defs_1.defs.tos;
     // get the coefficients
     const cs = coeff_1.coeff(p1, p2);
     let n = cs.length;
@@ -75,6 +73,7 @@ function Eval_nroots(p1) {
     }
     // n is the number of coefficients, n = deg(p) + 1
     monic(n);
+    const roots = [];
     for (let k = n; k > 1; k--) {
         findroot(k);
         if (Math.abs(nroots_a.r) < NROOTS_DELTA) {
@@ -83,19 +82,21 @@ function Eval_nroots(p1) {
         if (Math.abs(nroots_a.i) < NROOTS_DELTA) {
             nroots_a.i = 0.0;
         }
-        stack_1.push(add_1.add(bignum_1.double(nroots_a.r), multiply_1.multiply(bignum_1.double(nroots_a.i), defs_1.Constants.imaginaryunit)));
+        roots.push(add_1.add(bignum_1.double(nroots_a.r), multiply_1.multiply(bignum_1.double(nroots_a.i), defs_1.Constants.imaginaryunit)));
         NROOTS_divpoly(k);
     }
     // now make n equal to the number of roots
-    n = defs_1.defs.tos - h;
-    if (n > 1) {
-        misc_1.sort_stack(n);
+    n = roots.length;
+    if (n == 1) {
+        return roots[0];
+    }
+    else if (n > 1) {
+        roots.sort(misc_1.cmp_expr);
         p1 = alloc_1.alloc_tensor(n);
         p1.tensor.ndim = 1;
         p1.tensor.dim[0] = n;
-        p1.tensor.elem = defs_1.defs.stack.slice(h, h + n);
-        stack_1.moveTos(h);
-        stack_1.push(p1);
+        p1.tensor.elem = roots;
+        return p1;
     }
 }
 exports.Eval_nroots = Eval_nroots;

@@ -4,6 +4,7 @@ exports.findPossibleExponentialForm = exports.findPossibleClockForm = exports.Fi
 const is_1 = require("../sources/is");
 const misc_1 = require("../sources/misc");
 const defs_1 = require("./defs");
+const symbol_1 = require("./symbol");
 // returns true if expr p contains expr q, otherwise returns false
 function Find(p, q) {
     if (misc_1.equal(p, q)) {
@@ -55,7 +56,7 @@ function findPossibleClockForm(p, p1) {
 exports.findPossibleClockForm = findPossibleClockForm;
 // find stuff like (e)^(i something)
 function findPossibleExponentialForm(p) {
-    if (defs_1.ispower(p) && defs_1.cadr(p) === defs_1.symbol(defs_1.E)) {
+    if (defs_1.ispower(p) && defs_1.cadr(p) === symbol_1.symbol(defs_1.E)) {
         return Find(defs_1.caddr(p), defs_1.Constants.imaginaryunit);
     }
     if (defs_1.istensor(p)) {

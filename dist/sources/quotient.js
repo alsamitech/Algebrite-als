@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.divpoly = exports.Eval_quotient = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const coeff_1 = require("./coeff");
@@ -14,10 +14,10 @@ function Eval_quotient(p1) {
     const DIVIDEND = eval_1.Eval(defs_1.cadr(p1)); // 1st arg, p(x)
     const DIVISOR = eval_1.Eval(defs_1.caddr(p1)); // 2nd arg, q(x)
     let X = eval_1.Eval(defs_1.cadddr(p1)); // 3rd arg, x, default x
-    if (X === defs_1.symbol(defs_1.NIL)) {
-        X = defs_1.symbol(defs_1.SYMBOL_X);
+    if (X === symbol_1.symbol(defs_1.NIL)) {
+        X = symbol_1.symbol(defs_1.SYMBOL_X);
     }
-    stack_1.push(divpoly(DIVIDEND, DIVISOR, X));
+    return divpoly(DIVIDEND, DIVISOR, X);
 }
 exports.Eval_quotient = Eval_quotient;
 //-----------------------------------------------------------------------------

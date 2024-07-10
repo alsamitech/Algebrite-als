@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_arccosh = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
@@ -24,11 +24,11 @@ Returns the inverse hyperbolic cosine of x.
 
 */
 function Eval_arccosh(x) {
-    stack_1.push(arccosh(eval_1.Eval(defs_1.cadr(x))));
+    return arccosh(eval_1.Eval(defs_1.cadr(x)));
 }
 exports.Eval_arccosh = Eval_arccosh;
 function arccosh(x) {
-    if (defs_1.car(x) === defs_1.symbol(defs_1.COSH)) {
+    if (defs_1.car(x) === symbol_1.symbol(defs_1.COSH)) {
         return defs_1.cadr(x);
     }
     if (defs_1.isdouble(x)) {
@@ -42,5 +42,5 @@ function arccosh(x) {
     if (is_1.isplusone(x)) {
         return defs_1.Constants.zero;
     }
-    return list_1.makeList(defs_1.symbol(defs_1.ARCCOSH), x);
+    return list_1.makeList(symbol_1.symbol(defs_1.ARCCOSH), x);
 }

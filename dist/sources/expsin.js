@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.expsin = exports.Eval_expsin = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -10,8 +9,7 @@ const eval_1 = require("./eval");
 const multiply_1 = require("./multiply");
 // Do the exponential sine function.
 function Eval_expsin(p1) {
-    const result = expsin(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return expsin(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_expsin = Eval_expsin;
 function expsin(p1) {

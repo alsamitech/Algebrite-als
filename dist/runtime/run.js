@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.computeResultsAndJavaScriptFromAlgebra = exports.computeDependenciesFromAlgebra = exports.check_esc_flag = exports.top_level_eval = exports.check_stack = exports.run = exports.findDependenciesInScript = exports.stop = void 0;
-const stack_1 = require("./stack");
 const bake_1 = require("../sources/bake");
 const clear_1 = require("../sources/clear");
 const eval_1 = require("../sources/eval");
@@ -25,7 +24,6 @@ function stop(s) {
     //breakpoint
     const message = defs_1.defs.errorMessage;
     defs_1.defs.errorMessage = '';
-    stack_1.moveTos(0);
     throw new Error(message);
 }
 exports.stop = stop;
@@ -92,11 +90,10 @@ function findDependenciesInScript(stringToBeParsed, dontGenerateCode = false) {
             if (defs_1.DEBUG) {
                 console.log('findDependenciesInScript: scanning');
             }
-            n = scan_1.scan(stringToBeParsed.substring(indexOfPartRemainingToBeParsed));
+            [n] = scan_1.scan(stringToBeParsed.substring(indexOfPartRemainingToBeParsed));
             if (defs_1.DEBUG) {
                 console.log('scanned');
             }
-            stack_1.pop();
             check_stack();
         }
         catch (error) {
@@ -238,7 +235,7 @@ function findDependenciesInScript(stringToBeParsed, dontGenerateCode = false) {
                 // Note that the variable
                 // will still point to un-simplified structures,
                 // we only simplify the generated code.
-                stack_1.push(symbol_1.get_binding(symbol_1.usr_symbol(key)));
+                let v = symbol_1.get_binding(symbol_1.usr_symbol(key));
                 // Since we go and simplify all variables we meet,
                 // we have to replace each variable passed as a parameter
                 // with something entirely new, so that there is no chance
@@ -264,14 +261,14 @@ function findDependenciesInScript(stringToBeParsed, dontGenerateCode = false) {
                         const newUserSymbol = symbol_1.usr_symbol('AVOID_BINDING_TO_EXTERNAL_SCOPE_VALUE' + deQuotedDep);
                         replacementsFrom.push(originalUserSymbol);
                         replacementsTo.push(newUserSymbol);
-                        stack_1.push(subst_1.subst(stack_1.pop(), originalUserSymbol, newUserSymbol));
+                        v = subst_1.subst(v, originalUserSymbol, newUserSymbol);
                         if (defs_1.DEBUG) {
-                            console.log(`after substitution: ${stack_1.top()}`);
+                            console.log(`after substitution: ${v}`);
                         }
                     }
                 }
                 try {
-                    stack_1.push(simplify_1.simplifyForCodeGeneration(stack_1.pop()));
+                    v = simplify_1.simplifyForCodeGeneration(v);
                 }
                 catch (error) {
                     if (defs_1.PRINTOUTRESULT) {
@@ -283,11 +280,11 @@ function findDependenciesInScript(stringToBeParsed, dontGenerateCode = false) {
                 }
                 for (let indexOfEachReplacement = 0; indexOfEachReplacement < replacementsFrom.length; indexOfEachReplacement++) {
                     //console.log "replacing back " + replacementsTo[indexOfEachReplacement] + " into: " + replacementsFrom[indexOfEachReplacement]
-                    stack_1.push(subst_1.subst(stack_1.pop(), replacementsTo[indexOfEachReplacement], replacementsFrom[indexOfEachReplacement]));
+                    v = subst_1.subst(v, replacementsTo[indexOfEachReplacement], replacementsFrom[indexOfEachReplacement]);
                 }
-                clear_1.clearRenamedVariablesToAvoidBindingToExternalScope();
+                symbol_1.clearRenamedVariablesToAvoidBindingToExternalScope();
                 if (defs_1.defs.errorMessage === '') {
-                    const toBePrinted = stack_1.pop();
+                    const toBePrinted = v;
                     // we have to get all the variables used on the right side
                     // here. I.e. to print the arguments it's better to look at the
                     // actual method body after simplification.
@@ -530,8 +527,7 @@ function run(stringToBeRun, generateLatex = false) {
         try {
             defs_1.defs.errorMessage = '';
             check_stack();
-            n = scan_1.scan(stringToBeRun.substring(indexOfPartRemainingToBeParsed));
-            p1 = stack_1.pop();
+            [n, p1] = scan_1.scan(stringToBeRun.substring(indexOfPartRemainingToBeParsed));
             check_stack();
         }
         catch (error) {
@@ -560,15 +556,12 @@ function run(stringToBeRun, generateLatex = false) {
         //    printchar('\n')
         //}
         indexOfPartRemainingToBeParsed += n;
-        stack_1.push(p1);
-        //breakpoint
         let errorWhileExecution = false;
         try {
             defs_1.defs.stringsEmittedByUserPrintouts = '';
-            top_level_eval();
+            p2 = top_level_eval(p1);
             //console.log "emitted string after top_level_eval(): >" + stringsEmittedByUserPrintouts + "<"
             //console.log "allReturnedPlainStrings string after top_level_eval(): >" + allReturnedPlainStrings + "<"
-            p2 = stack_1.pop();
             check_stack();
             if (defs_1.isstr(p2)) {
                 if (defs_1.DEBUG) {
@@ -580,7 +573,7 @@ function run(stringToBeRun, generateLatex = false) {
             }
             // if the return value is nil there isn't much point
             // in adding "nil" to the printout
-            if (p2 === defs_1.symbol(defs_1.NIL)) {
+            if (p2 === symbol_1.symbol(defs_1.NIL)) {
                 //collectedPlainResult = stringsEmittedByUserPrintouts
                 collectedPlainResult = defs_1.defs.stringsEmittedByUserPrintouts;
                 if (generateLatex) {
@@ -676,14 +669,6 @@ function run(stringToBeRun, generateLatex = false) {
 }
 exports.run = run;
 function check_stack() {
-    if (defs_1.defs.tos !== 0) {
-        defs_1.breakpoint;
-        stop('stack error');
-    }
-    if (defs_1.defs.frame !== defs_1.TOS) {
-        defs_1.breakpoint;
-        stop('frame error');
-    }
     if (defs_1.defs.chainOfUserSymbolsNotFunctionsBeingEvaluated.length !== 0) {
         defs_1.breakpoint;
         stop('symbols evaluation still ongoing?');
@@ -699,45 +684,44 @@ function check_stack() {
 }
 exports.check_stack = check_stack;
 // cannot reference symbols yet
-// returns nil on stack if no result to print
-function top_level_eval() {
+// returns nil if no result to print
+function top_level_eval(expr) {
     if (defs_1.DEBUG) {
         console.log('#### top level eval');
     }
     defs_1.defs.trigmode = 0;
-    const shouldAutoexpand = defs_1.symbol(defs_1.AUTOEXPAND);
+    const shouldAutoexpand = symbol_1.symbol(defs_1.AUTOEXPAND);
     defs_1.defs.expanding = !is_1.isZeroAtomOrTensor(symbol_1.get_binding(shouldAutoexpand));
-    const originalArgument = stack_1.top();
-    stack_1.push(eval_1.Eval(stack_1.pop()));
-    let evalledArgument = stack_1.top();
+    const originalArgument = expr;
+    let evalledArgument = eval_1.Eval(expr);
     // "draw", "for" and "setq" return "nil", there is no result to print
-    if (evalledArgument === defs_1.symbol(defs_1.NIL)) {
-        return;
+    if (evalledArgument === symbol_1.symbol(defs_1.NIL)) {
+        return evalledArgument;
     }
     // update "last" to contain the last result
-    symbol_1.set_binding(defs_1.symbol(defs_1.LAST), evalledArgument);
-    if (!is_1.isZeroAtomOrTensor(symbol_1.get_binding(defs_1.symbol(defs_1.BAKE)))) {
-        const baked = bake_1.bake(stack_1.pop());
+    symbol_1.set_binding(symbol_1.symbol(defs_1.LAST), evalledArgument);
+    if (!is_1.isZeroAtomOrTensor(symbol_1.get_binding(symbol_1.symbol(defs_1.BAKE)))) {
+        const baked = bake_1.bake(evalledArgument);
         evalledArgument = baked;
-        stack_1.push(baked);
     }
     // If user asked explicitly asked to evaluate "i" or "j" and
     // they represent the imaginary unit (-1)^(1/2), then
     // show (-1)^(1/2).
-    if ((originalArgument === defs_1.symbol(defs_1.SYMBOL_I) ||
-        originalArgument === defs_1.symbol(defs_1.SYMBOL_J)) &&
+    if ((originalArgument === symbol_1.symbol(defs_1.SYMBOL_I) ||
+        originalArgument === symbol_1.symbol(defs_1.SYMBOL_J)) &&
         is_1.isimaginaryunit(evalledArgument)) {
-        return;
+        return evalledArgument;
         // In all other cases, replace all instances of (-1)^(1/2) in the result
         // with the symbol "i" or "j" depending on which one
         // represents the imaginary unit
     }
-    else if (is_1.isimaginaryunit(symbol_1.get_binding(defs_1.symbol(defs_1.SYMBOL_J)))) {
-        stack_1.push(subst_1.subst(stack_1.pop(), defs_1.Constants.imaginaryunit, defs_1.symbol(defs_1.SYMBOL_J)));
+    else if (is_1.isimaginaryunit(symbol_1.get_binding(symbol_1.symbol(defs_1.SYMBOL_J)))) {
+        return subst_1.subst(evalledArgument, defs_1.Constants.imaginaryunit, symbol_1.symbol(defs_1.SYMBOL_J));
     }
-    else if (is_1.isimaginaryunit(symbol_1.get_binding(defs_1.symbol(defs_1.SYMBOL_I)))) {
-        stack_1.push(subst_1.subst(stack_1.pop(), defs_1.Constants.imaginaryunit, defs_1.symbol(defs_1.SYMBOL_I)));
+    else if (is_1.isimaginaryunit(symbol_1.get_binding(symbol_1.symbol(defs_1.SYMBOL_I)))) {
+        return subst_1.subst(evalledArgument, defs_1.Constants.imaginaryunit, symbol_1.symbol(defs_1.SYMBOL_I));
     }
+    return evalledArgument;
 }
 exports.top_level_eval = top_level_eval;
 function check_esc_flag() {
@@ -755,7 +739,7 @@ exports.check_esc_flag = check_esc_flag;
 function clearAlgebraEnvironment() {
     let p1, p6;
     let do_clearallResult;
-    [do_clearallResult, p1, p6] = clear_1.do_clearall();
+    do_clearallResult = clear_1.do_clearall();
     //console.log "CLEARING clearAlgebraEnvironment ============================================================="
     return do_clearallResult;
 }
@@ -786,7 +770,7 @@ function computeDependenciesFromAlgebra(codeFromAlgebraBlock) {
                     defs_1.car(defs_1.cdr(defs_1.cdr(i))) +
                     ')\n';
         }
-        [p1, p6] = clear_1.do_clearall();
+        clear_1.do_clearall();
         codeFromAlgebraBlock =
             userSimplificationsInProgramForm + codeFromAlgebraBlock;
         if (defs_1.DEBUG) {
@@ -844,7 +828,7 @@ function computeResultsAndJavaScriptFromAlgebra(codeFromAlgebraBlock) {
                     defs_1.car(defs_1.cdr(defs_1.cdr(i))) +
                     ')\n';
         }
-        [p1, p6] = clear_1.do_clearall();
+        clear_1.do_clearall();
         codeFromAlgebraBlock =
             userSimplificationsInProgramForm + codeFromAlgebraBlock;
         if (defs_1.DEBUG) {

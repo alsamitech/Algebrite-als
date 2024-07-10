@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.subtract = exports.add_all = exports.add = exports.Eval_add = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
-const misc_1 = require("./misc");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
 const list_1 = require("./list");
+const misc_1 = require("./misc");
 const multiply_1 = require("./multiply");
 const print_1 = require("./print");
 const tensor_1 = require("./tensor");
@@ -42,7 +42,7 @@ function Eval_add(p1) {
         const p2 = eval_1.Eval(t);
         push_terms(terms, p2);
     }
-    stack_1.push(add_terms(terms));
+    return add_terms(terms);
 }
 exports.Eval_add = Eval_add;
 // Add terms, returns one expression.
@@ -70,7 +70,7 @@ function add_terms(terms) {
         case 1:
             return terms[0];
         default:
-            terms.unshift(defs_1.symbol(defs_1.ADD));
+            terms.unshift(symbol_1.symbol(defs_1.ADD));
             return list_1.makeList(...terms);
     }
 }
@@ -114,7 +114,7 @@ function cmp_terms(p1, p2) {
         p1 = defs_1.cdr(p1);
         if (defs_1.isNumericAtom(defs_1.car(p1))) {
             p1 = defs_1.cdr(p1);
-            if (defs_1.cdr(p1) === defs_1.symbol(defs_1.NIL)) {
+            if (defs_1.cdr(p1) === symbol_1.symbol(defs_1.NIL)) {
                 p1 = defs_1.car(p1);
             }
         }
@@ -123,7 +123,7 @@ function cmp_terms(p1, p2) {
         p2 = defs_1.cdr(p2);
         if (defs_1.isNumericAtom(defs_1.car(p2))) {
             p2 = defs_1.cdr(p2);
-            if (defs_1.cdr(p2) === defs_1.symbol(defs_1.NIL)) {
+            if (defs_1.cdr(p2) === symbol_1.symbol(defs_1.NIL)) {
                 p2 = defs_1.car(p2);
             }
         }
@@ -154,7 +154,7 @@ function combine_terms(terms) {
         let p4 = terms[i + 1];
         if (defs_1.istensor(p3) && defs_1.istensor(p4)) {
             p1 = tensor_1.tensor_plus_tensor(p3, p4);
-            if (p1 !== defs_1.symbol(defs_1.NIL)) {
+            if (p1 !== symbol_1.symbol(defs_1.NIL)) {
                 terms.splice(i, 2, p1);
                 i--;
             }
@@ -190,7 +190,7 @@ function combine_terms(terms) {
             if (defs_1.isNumericAtom(defs_1.car(p3))) {
                 p1 = defs_1.car(p3);
                 p3 = defs_1.cdr(p3);
-                if (defs_1.cdr(p3) === defs_1.symbol(defs_1.NIL)) {
+                if (defs_1.cdr(p3) === symbol_1.symbol(defs_1.NIL)) {
                     p3 = defs_1.car(p3);
                     t = 0;
                 }
@@ -201,7 +201,7 @@ function combine_terms(terms) {
             if (defs_1.isNumericAtom(defs_1.car(p4))) {
                 p2 = defs_1.car(p4);
                 p4 = defs_1.cdr(p4);
-                if (defs_1.cdr(p4) === defs_1.symbol(defs_1.NIL)) {
+                if (defs_1.cdr(p4) === symbol_1.symbol(defs_1.NIL)) {
                     p4 = defs_1.car(p4);
                 }
             }
@@ -217,7 +217,7 @@ function combine_terms(terms) {
             i++;
             continue;
         }
-        const arg2 = t ? new defs_1.Cons(defs_1.symbol(defs_1.MULTIPLY), p3) : p3;
+        const arg2 = t ? new defs_1.Cons(symbol_1.symbol(defs_1.MULTIPLY), p3) : p3;
         terms.splice(i, 2, multiply_1.multiply(p1, arg2));
         i--;
         // this i++ is to match the while

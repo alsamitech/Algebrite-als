@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.degree = exports.Eval_degree = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const eval_1 = require("./eval");
 const guess_1 = require("./guess");
@@ -23,10 +23,10 @@ Returns the degree of polynomial p(x).
 
 */
 function Eval_degree(p1) {
+    const poly = eval_1.Eval(defs_1.cadr(p1));
     p1 = eval_1.Eval(defs_1.caddr(p1));
-    const top = eval_1.Eval(defs_1.cadr(p1));
-    const variable = p1 === defs_1.symbol(defs_1.NIL) ? guess_1.guess(top) : p1;
-    stack_1.push(degree(top, variable));
+    const variable = p1 === symbol_1.symbol(defs_1.NIL) ? guess_1.guess(poly) : p1;
+    return degree(poly, variable);
 }
 exports.Eval_degree = Eval_degree;
 //-----------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_leading = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const degree_1 = require("./degree");
 const eval_1 = require("./eval");
 const filter_1 = require("./filter");
@@ -25,8 +25,8 @@ The result is undefined if P is not a polynomial.
 function Eval_leading(p1) {
     const P = eval_1.Eval(defs_1.cadr(p1));
     p1 = eval_1.Eval(defs_1.caddr(p1));
-    const X = p1 === defs_1.symbol(defs_1.NIL) ? guess_1.guess(P) : p1;
-    stack_1.push(leading(P, X));
+    const X = p1 === symbol_1.symbol(defs_1.NIL) ? guess_1.guess(P) : p1;
+    return leading(P, X);
 }
 exports.Eval_leading = Eval_leading;
 function leading(P, X) {

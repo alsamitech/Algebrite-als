@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_or = exports.Eval_and = exports.Eval_not = exports.Eval_testlt = exports.Eval_testle = exports.Eval_testgt = exports.Eval_testge = exports.Eval_testeq = exports.Eval_test = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
 const float_1 = require("./float");
@@ -12,17 +12,13 @@ const simplify_1 = require("./simplify");
 // Works like a switch statement. Could also be used for piecewise
 // functions? TODO should probably be called "switch"?
 function Eval_test(p1) {
-    stack_1.push(_test(p1));
-}
-exports.Eval_test = Eval_test;
-function _test(p1) {
     const orig = p1;
     p1 = defs_1.cdr(p1);
     while (defs_1.iscons(p1)) {
         // odd number of parameters means that the
         // last argument becomes the default case
         // i.e. the one without a test.
-        if (defs_1.cdr(p1) === defs_1.symbol(defs_1.NIL)) {
+        if (defs_1.cdr(p1) === symbol_1.symbol(defs_1.NIL)) {
             return eval_1.Eval(defs_1.car(p1)); // default case
         }
         const checkResult = is_1.isZeroLikeOrNonZeroLikeOrUndetermined(defs_1.car(p1));
@@ -48,6 +44,7 @@ function _test(p1) {
     // catch-all case, so we return zero.
     return defs_1.Constants.zero;
 }
+exports.Eval_test = Eval_test;
 // we test A==B by first subtracting and checking if we symbolically
 // get zero. If not, we evaluate to float and check if we get a zero.
 // If we get another NUMBER then we know they are different.
@@ -66,12 +63,10 @@ function Eval_testeq(p1) {
     // that here and down below.
     let checkResult = is_1.isZeroLikeOrNonZeroLikeOrUndetermined(subtractionResult);
     if (checkResult) {
-        stack_1.push(defs_1.Constants.zero);
-        return;
+        return defs_1.Constants.zero;
     }
     else if (checkResult != null && !checkResult) {
-        stack_1.push(defs_1.Constants.one);
-        return;
+        return defs_1.Constants.one;
     }
     // we didn't get a simple numeric result but
     // let's try again after doing
@@ -81,17 +76,15 @@ function Eval_testeq(p1) {
     subtractionResult = add_1.subtract(arg1, arg2);
     checkResult = is_1.isZeroLikeOrNonZeroLikeOrUndetermined(subtractionResult);
     if (checkResult) {
-        stack_1.push(defs_1.Constants.zero);
-        return;
+        return defs_1.Constants.zero;
     }
     else if (checkResult != null && !checkResult) {
-        stack_1.push(defs_1.Constants.one);
-        return;
+        return defs_1.Constants.one;
     }
     // if we didn't get to a number then we
     // don't know whether the quantities are
     // different so do nothing
-    stack_1.push(orig);
+    return orig;
 }
 exports.Eval_testeq = Eval_testeq;
 // Relational operators expect a numeric result for operand difference.
@@ -99,14 +92,13 @@ function Eval_testge(p1) {
     const orig = p1;
     const comparison = cmp_args(p1);
     if (comparison == null) {
-        stack_1.push(orig);
-        return;
+        return orig;
     }
     if (comparison >= 0) {
-        stack_1.push(defs_1.Constants.one);
+        return defs_1.Constants.one;
     }
     else {
-        stack_1.push(defs_1.Constants.zero);
+        return defs_1.Constants.zero;
     }
 }
 exports.Eval_testge = Eval_testge;
@@ -114,14 +106,13 @@ function Eval_testgt(p1) {
     const orig = p1;
     const comparison = cmp_args(p1);
     if (comparison == null) {
-        stack_1.push(orig);
-        return;
+        return orig;
     }
     if (comparison > 0) {
-        stack_1.push(defs_1.Constants.one);
+        return defs_1.Constants.one;
     }
     else {
-        stack_1.push(defs_1.Constants.zero);
+        return defs_1.Constants.zero;
     }
 }
 exports.Eval_testgt = Eval_testgt;
@@ -129,14 +120,13 @@ function Eval_testle(p1) {
     const orig = p1;
     const comparison = cmp_args(p1);
     if (comparison == null) {
-        stack_1.push(orig);
-        return;
+        return orig;
     }
     if (comparison <= 0) {
-        stack_1.push(defs_1.Constants.one);
+        return defs_1.Constants.one;
     }
     else {
-        stack_1.push(defs_1.Constants.zero);
+        return defs_1.Constants.zero;
     }
 }
 exports.Eval_testle = Eval_testle;
@@ -144,14 +134,13 @@ function Eval_testlt(p1) {
     const orig = p1;
     const comparison = cmp_args(p1);
     if (comparison == null) {
-        stack_1.push(orig);
-        return;
+        return orig;
     }
     if (comparison < 0) {
-        stack_1.push(defs_1.Constants.one);
+        return defs_1.Constants.one;
     }
     else {
-        stack_1.push(defs_1.Constants.zero);
+        return defs_1.Constants.zero;
     }
 }
 exports.Eval_testlt = Eval_testlt;
@@ -161,15 +150,15 @@ function Eval_not(p1) {
     const checkResult = is_1.isZeroLikeOrNonZeroLikeOrUndetermined(defs_1.cadr(p1));
     if (checkResult == null) {
         // inconclusive test on predicate
-        stack_1.push(wholeAndExpression);
+        return wholeAndExpression;
     }
     else if (checkResult) {
         // true -> false
-        stack_1.push(defs_1.Constants.zero);
+        return defs_1.Constants.zero;
     }
     else {
         // false -> true
-        stack_1.push(defs_1.Constants.one);
+        return defs_1.Constants.one;
     }
 }
 exports.Eval_not = Eval_not;
@@ -215,8 +204,7 @@ function Eval_and(p1) {
         }
         else if (!checkResult) {
             // found a false, enough to falsify everything and return
-            stack_1.push(defs_1.Constants.zero);
-            return;
+            return defs_1.Constants.zero;
         }
     }
     // We checked all the predicates and none of them
@@ -226,10 +214,10 @@ function Eval_and(p1) {
     // If all the predicates were known, then we can conclude
     // that the test returns true.
     if (somePredicateUnknown) {
-        stack_1.push(wholeAndExpression);
+        return wholeAndExpression;
     }
     else {
-        stack_1.push(defs_1.Constants.one);
+        return defs_1.Constants.one;
     }
 }
 exports.Eval_and = Eval_and;
@@ -256,8 +244,7 @@ function Eval_or(p1) {
         }
         else if (checkResult) {
             // found a true, enough to return true
-            stack_1.push(defs_1.Constants.one);
-            return;
+            return defs_1.Constants.one;
         }
         else if (!checkResult) {
             // found a false, move on to the next predicate
@@ -271,10 +258,10 @@ function Eval_or(p1) {
     // If all the predicates were known, then we can conclude
     // that the test returns false.
     if (somePredicateUnknown) {
-        stack_1.push(wholeOrExpression);
+        return wholeOrExpression;
     }
     else {
-        stack_1.push(defs_1.Constants.zero);
+        return defs_1.Constants.zero;
     }
 }
 exports.Eval_or = Eval_or;

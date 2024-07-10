@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.imag = exports.Eval_imag = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const conj_1 = require("./conj");
@@ -21,8 +20,7 @@ const rect_1 = require("./rect");
 */
 const DEBUG_IMAG = false;
 function Eval_imag(p1) {
-    const result = imag(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return imag(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_imag = Eval_imag;
 function imag(p) {

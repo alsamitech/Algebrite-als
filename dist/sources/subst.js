@@ -5,6 +5,7 @@ const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const misc_1 = require("../sources/misc");
 const tensor_1 = require("./tensor");
+const symbol_1 = require("../runtime/symbol");
 /*
   Substitute new expr for old expr in expr.
 
@@ -15,7 +16,7 @@ const tensor_1 = require("./tensor");
   Output:  Result
 */
 function subst(expr, oldExpr, newExpr) {
-    if (oldExpr === defs_1.symbol(defs_1.NIL) || newExpr === defs_1.symbol(defs_1.NIL)) {
+    if (oldExpr === symbol_1.symbol(defs_1.NIL) || newExpr === symbol_1.symbol(defs_1.NIL)) {
         return expr;
     }
     if (defs_1.istensor(expr)) {

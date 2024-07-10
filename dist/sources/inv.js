@@ -13,6 +13,7 @@ const is_1 = require("./is");
 const list_1 = require("./list");
 const multiply_1 = require("./multiply");
 const tensor_1 = require("./tensor");
+const symbol_1 = require("../runtime/symbol");
 //-----------------------------------------------------------------------------
 //
 //  Input:    Matrix (must have two dimensions but it can be non-numerical)
@@ -54,7 +55,7 @@ function inv(p1) {
         return inverses[0];
     }
     if (!tensor_1.is_square_matrix(p1)) {
-        return list_1.makeList(defs_1.symbol(defs_1.INV), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.INV), p1);
     }
     if (defs_1.isNumericAtomOrTensor(p1)) {
         return yyinvg(p1);
@@ -68,7 +69,7 @@ function inv(p1) {
 exports.inv = inv;
 function invg(p1) {
     if (!tensor_1.is_square_matrix(p1)) {
-        return list_1.makeList(defs_1.symbol(defs_1.INVG), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.INVG), p1);
     }
     return yyinvg(p1);
 }

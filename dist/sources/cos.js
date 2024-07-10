@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cosine = exports.Eval_cos = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -27,8 +27,7 @@ Returns the cosine of x.
 
 */
 function Eval_cos(p1) {
-    const result = cosine(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return cosine(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_cos = Eval_cos;
 function cosine(p1) {
@@ -51,7 +50,7 @@ function cosine_of_angle_sum(p1) {
     return cosine_of_angle(p1);
 }
 function cosine_of_angle(p1) {
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.ARCCOS)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.ARCCOS)) {
         return defs_1.cadr(p1);
     }
     if (defs_1.isdouble(p1)) {
@@ -67,7 +66,7 @@ function cosine_of_angle(p1) {
     }
     // cos(arctan(x)) = 1 / sqrt(1 + x^2)
     // see p. 173 of the CRC Handbook of Mathematical Sciences
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.ARCTAN)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.ARCTAN)) {
         const base = add_1.add(defs_1.Constants.one, power_1.power(defs_1.cadr(p1), bignum_1.integer(2)));
         return power_1.power(base, bignum_1.rational(-1, 2));
     }
@@ -85,7 +84,7 @@ function cosine_of_angle(p1) {
     // happen for a round number of degrees. There are some exceptions
     // though, e.g. 22.5 degrees, which we don't capture here.
     if (n < 0 || isNaN(n)) {
-        return list_1.makeList(defs_1.symbol(defs_1.COS), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.COS), p1);
     }
     switch (n % 360) {
         case 90:
@@ -114,6 +113,6 @@ function cosine_of_angle(p1) {
         case 180:
             return defs_1.Constants.negOne;
         default:
-            return list_1.makeList(defs_1.symbol(defs_1.COS), p1);
+            return list_1.makeList(symbol_1.symbol(defs_1.COS), p1);
     }
 }

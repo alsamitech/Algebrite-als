@@ -4,7 +4,6 @@ exports.make_hashed_itab = exports.integral = exports.Eval_integral = void 0;
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
@@ -382,9 +381,9 @@ function Eval_integral(p1) {
     p1 = defs_1.cdr(p1);
     const p2 = eval_1.Eval(defs_1.car(p1));
     let N, X;
-    if (p2 === defs_1.symbol(defs_1.NIL)) {
+    if (p2 === symbol_1.symbol(defs_1.NIL)) {
         X = guess_1.guess(F);
-        N = defs_1.symbol(defs_1.NIL);
+        N = symbol_1.symbol(defs_1.NIL);
     }
     else if (defs_1.isNumericAtom(p2)) {
         X = guess_1.guess(F);
@@ -420,7 +419,7 @@ function Eval_integral(p1) {
         }
         F = temp;
         // if N is nil then arglist is exhausted
-        if (N === defs_1.symbol(defs_1.NIL)) {
+        if (N === symbol_1.symbol(defs_1.NIL)) {
             break;
         }
         // otherwise...
@@ -436,7 +435,7 @@ function Eval_integral(p1) {
         if (defs_1.isNumericAtom(N)) {
             p1 = defs_1.cdr(p1);
             N = eval_1.Eval(defs_1.car(p1));
-            if (N === defs_1.symbol(defs_1.NIL)) {
+            if (N === symbol_1.symbol(defs_1.NIL)) {
                 break; // arglist exhausted
             }
             if (!defs_1.isNumericAtom(N)) {
@@ -451,7 +450,7 @@ function Eval_integral(p1) {
             N = eval_1.Eval(defs_1.car(p1));
         }
     }
-    stack_1.push(F);
+    return F;
 }
 exports.Eval_integral = Eval_integral;
 function integral(F, X) {
@@ -465,7 +464,7 @@ function integral(F, X) {
     else {
         integ = integral_of_form(F, X);
     }
-    if (find_1.Find(integ, defs_1.symbol(defs_1.INTEGRAL))) {
+    if (find_1.Find(integ, symbol_1.symbol(defs_1.INTEGRAL))) {
         run_1.stop('integral: sorry, could not find a solution');
     }
     // polish then normalize
@@ -491,11 +490,11 @@ function integral_of_form(F, X) {
     if (!tab) {
         // breakpoint
         // italu_hashcode(p1, p2)
-        return list_1.makeList(defs_1.symbol(defs_1.INTEGRAL), F, X);
+        return list_1.makeList(symbol_1.symbol(defs_1.INTEGRAL), F, X);
     }
     const [p3, _] = transform_1.transform(F, X, tab, false);
-    if (p3 === defs_1.symbol(defs_1.NIL)) {
-        return list_1.makeList(defs_1.symbol(defs_1.INTEGRAL), F, X);
+    if (p3 === symbol_1.symbol(defs_1.NIL)) {
+        return list_1.makeList(symbol_1.symbol(defs_1.INTEGRAL), F, X);
     }
     return p3;
 }
@@ -505,21 +504,21 @@ function integral_of_form(F, X) {
 // The first two values are from the ITALU paper.
 // The others are just arbitrary constants.
 const hashcode_values = {
-    x: 0.95532,
-    constexp: 1.43762,
-    constant: 1.14416593629414332,
-    constbase: 1.20364122304218824,
-    sin: 1.73305482518303221,
-    arcsin: 1.6483368529465804,
-    cos: 1.058672123686340116,
-    arccos: 1.8405225918106694,
-    tan: 1.12249437762925064,
-    arctan: 1.1297397925394962,
-    sinh: 1.8176164926060078,
-    cosh: 1.9404934661708022,
-    tanh: 1.6421307715103121,
-    log: 1.47744370135492387,
-    erf: 1.0825269225702916,
+    'x': 0.95532,
+    'constexp': 1.43762,
+    'constant': 1.14416593629414332,
+    'constbase': 1.20364122304218824,
+    'sin': 1.73305482518303221,
+    'arcsin': 1.6483368529465804,
+    'cos': 1.058672123686340116,
+    'arccos': 1.8405225918106694,
+    'tan': 1.12249437762925064,
+    'arctan': 1.1297397925394962,
+    'sinh': 1.8176164926060078,
+    'cosh': 1.9404934661708022,
+    'tanh': 1.6421307715103121,
+    'log': 1.47744370135492387,
+    'erf': 1.0825269225702916,
 };
 function italu_hashcode(u, x) {
     if (defs_1.issymbol(u)) {
@@ -531,7 +530,8 @@ function italu_hashcode(u, x) {
         }
     }
     else if (defs_1.iscons(u)) {
-        switch (symbol_1.symnum(defs_1.car(u))) {
+        const sym = defs_1.car(u);
+        switch (defs_1.issymbol(sym) && sym.printname) {
             case defs_1.ADD:
                 return hash_addition(defs_1.cdr(u), x);
             case defs_1.MULTIPLY:
@@ -539,10 +539,9 @@ function italu_hashcode(u, x) {
             case defs_1.POWER:
                 return hash_power(defs_1.cadr(u), defs_1.caddr(u), x);
             case defs_1.EXP:
-                return hash_power(defs_1.symbol(defs_1.E), defs_1.cadr(u), x);
+                return hash_power(symbol_1.symbol(defs_1.E), defs_1.cadr(u), x);
             case defs_1.SQRT:
-                bignum_1.push_double(0.5);
-                var half = stack_1.pop();
+                var half = bignum_1.double(0.5);
                 return hash_power(defs_1.cadr(u), half, x);
             default:
                 return hash_function(u, x);
@@ -632,10 +631,9 @@ function hash_power(base, power, x) {
 function make_hashed_itab() {
     const tab = {};
     for (let s of Array.from(itab)) {
-        scan_1.scan_meta(s);
-        const f = stack_1.pop();
+        const f = scan_1.scan_meta(s);
         const u = defs_1.cadr(f);
-        const h = italu_hashcode(u, defs_1.symbol(defs_1.METAX));
+        const h = italu_hashcode(u, symbol_1.symbol(defs_1.METAX));
         const key = h.toFixed(6);
         if (!tab[key]) {
             tab[key] = [];

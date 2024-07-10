@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_lookup = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 // now this might be a little confusing, so a
 // clarification is in order.
@@ -122,6 +121,6 @@ function Eval_lookup(p1) {
     if (!defs_1.iscons(p1) && defs_1.cadr(p1).k === defs_1.SYM) {
         p1 = symbol_1.get_binding(p1);
     }
-    stack_1.push(p1);
+    return p1;
 }
 exports.Eval_lookup = Eval_lookup;

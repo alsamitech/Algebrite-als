@@ -4,7 +4,7 @@ exports.derivative = exports.Eval_derivative = void 0;
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const besselj_1 = require("./besselj");
@@ -47,9 +47,9 @@ function Eval_derivative(p1) {
     p1 = defs_1.cdr(p1);
     let X, N;
     const p2 = eval_1.Eval(defs_1.car(p1));
-    if (p2 === defs_1.symbol(defs_1.NIL)) {
+    if (p2 === symbol_1.symbol(defs_1.NIL)) {
         X = guess_1.guess(F);
-        N = defs_1.symbol(defs_1.NIL);
+        N = symbol_1.symbol(defs_1.NIL);
     }
     else if (defs_1.isNumericAtom(p2)) {
         X = guess_1.guess(F);
@@ -86,7 +86,7 @@ function Eval_derivative(p1) {
         }
         F = temp;
         // if p5 (N) is nil then arglist is exhausted
-        if (N === defs_1.symbol(defs_1.NIL)) {
+        if (N === symbol_1.symbol(defs_1.NIL)) {
             break;
         }
         // otherwise...
@@ -102,7 +102,7 @@ function Eval_derivative(p1) {
         if (defs_1.isNumericAtom(N)) {
             p1 = defs_1.cdr(p1);
             N = eval_1.Eval(defs_1.car(p1));
-            if (N === defs_1.symbol(defs_1.NIL)) {
+            if (N === symbol_1.symbol(defs_1.NIL)) {
                 break; // arglist exhausted
             }
             if (!defs_1.isNumericAtom(N)) {
@@ -117,7 +117,7 @@ function Eval_derivative(p1) {
             N = eval_1.Eval(defs_1.car(p1));
         }
     }
-    stack_1.push(F); // final result
+    return F; // final result
 }
 exports.Eval_derivative = Eval_derivative;
 function derivative(p1, p2) {
@@ -148,8 +148,8 @@ function d_scalar_scalar(p1, p2) {
     }
     // Example: d(sin(cos(x)),cos(x))
     // Replace cos(x) <- X, find derivative, then do X <- cos(x)
-    const arg1 = subst_1.subst(p1, p2, defs_1.symbol(defs_1.SECRETX)); // p1: sin(cos(x)), p2: cos(x), symbol(SECRETX): X => sin(cos(x)) -> sin(X)
-    return subst_1.subst(derivative(arg1, defs_1.symbol(defs_1.SECRETX)), defs_1.symbol(defs_1.SECRETX), p2); // p2:  cos(x)  =>  cos(X) -> cos(cos(x))
+    const arg1 = subst_1.subst(p1, p2, symbol_1.symbol(defs_1.SECRETX)); // p1: sin(cos(x)), p2: cos(x), symbol(SECRETX): X => sin(cos(x)) -> sin(X)
+    return subst_1.subst(derivative(arg1, symbol_1.symbol(defs_1.SECRETX)), symbol_1.symbol(defs_1.SECRETX), p2); // p2:  cos(x)  =>  cos(X) -> cos(cos(x))
 }
 function d_scalar_scalar_1(p1, p2) {
     // d(x,x)?
@@ -164,56 +164,56 @@ function d_scalar_scalar_1(p1, p2) {
         return dsum(p1, p2);
     }
     switch (defs_1.car(p1)) {
-        case defs_1.symbol(defs_1.MULTIPLY):
+        case symbol_1.symbol(defs_1.MULTIPLY):
             return dproduct(p1, p2);
-        case defs_1.symbol(defs_1.POWER):
+        case symbol_1.symbol(defs_1.POWER):
             return dpower(p1, p2);
-        case defs_1.symbol(defs_1.DERIVATIVE):
+        case symbol_1.symbol(defs_1.DERIVATIVE):
             return dd(p1, p2);
-        case defs_1.symbol(defs_1.LOG):
+        case symbol_1.symbol(defs_1.LOG):
             return dlog(p1, p2);
-        case defs_1.symbol(defs_1.SIN):
+        case symbol_1.symbol(defs_1.SIN):
             return dsin(p1, p2);
-        case defs_1.symbol(defs_1.COS):
+        case symbol_1.symbol(defs_1.COS):
             return dcos(p1, p2);
-        case defs_1.symbol(defs_1.TAN):
+        case symbol_1.symbol(defs_1.TAN):
             return dtan(p1, p2);
-        case defs_1.symbol(defs_1.ARCSIN):
+        case symbol_1.symbol(defs_1.ARCSIN):
             return darcsin(p1, p2);
-        case defs_1.symbol(defs_1.ARCCOS):
+        case symbol_1.symbol(defs_1.ARCCOS):
             return darccos(p1, p2);
-        case defs_1.symbol(defs_1.ARCTAN):
+        case symbol_1.symbol(defs_1.ARCTAN):
             return darctan(p1, p2);
-        case defs_1.symbol(defs_1.SINH):
+        case symbol_1.symbol(defs_1.SINH):
             return dsinh(p1, p2);
-        case defs_1.symbol(defs_1.COSH):
+        case symbol_1.symbol(defs_1.COSH):
             return dcosh(p1, p2);
-        case defs_1.symbol(defs_1.TANH):
+        case symbol_1.symbol(defs_1.TANH):
             return dtanh(p1, p2);
-        case defs_1.symbol(defs_1.ARCSINH):
+        case symbol_1.symbol(defs_1.ARCSINH):
             return darcsinh(p1, p2);
-        case defs_1.symbol(defs_1.ARCCOSH):
+        case symbol_1.symbol(defs_1.ARCCOSH):
             return darccosh(p1, p2);
-        case defs_1.symbol(defs_1.ARCTANH):
+        case symbol_1.symbol(defs_1.ARCTANH):
             return darctanh(p1, p2);
-        case defs_1.symbol(defs_1.ABS):
+        case symbol_1.symbol(defs_1.ABS):
             return dabs(p1, p2);
-        case defs_1.symbol(defs_1.SGN):
+        case symbol_1.symbol(defs_1.SGN):
             return dsgn(p1, p2);
-        case defs_1.symbol(defs_1.HERMITE):
+        case symbol_1.symbol(defs_1.HERMITE):
             return dhermite(p1, p2);
-        case defs_1.symbol(defs_1.ERF):
+        case symbol_1.symbol(defs_1.ERF):
             return derf(p1, p2);
-        case defs_1.symbol(defs_1.ERFC):
+        case symbol_1.symbol(defs_1.ERFC):
             return derfc(p1, p2);
-        case defs_1.symbol(defs_1.BESSELJ):
+        case symbol_1.symbol(defs_1.BESSELJ):
             return dbesselj(p1, p2);
-        case defs_1.symbol(defs_1.BESSELY):
+        case symbol_1.symbol(defs_1.BESSELY):
             return dbessely(p1, p2);
         default:
         // pass through
     }
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.INTEGRAL) && defs_1.caddr(p1) === p2) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.INTEGRAL) && defs_1.caddr(p1) === p2) {
         return derivative_of_integral(p1);
     }
     return dfunction(p1, p2);
@@ -286,13 +286,13 @@ function dlog(p1, p2) {
 function dd(p1, p2) {
     // d(f(x,y),x)
     const p3 = derivative(defs_1.cadr(p1), p2);
-    if (defs_1.car(p3) === defs_1.symbol(defs_1.DERIVATIVE)) {
+    if (defs_1.car(p3) === symbol_1.symbol(defs_1.DERIVATIVE)) {
         // sort dx terms
         if (misc_1.lessp(defs_1.caddr(p3), defs_1.caddr(p1))) {
-            return list_1.makeList(defs_1.symbol(defs_1.DERIVATIVE), list_1.makeList(defs_1.symbol(defs_1.DERIVATIVE), defs_1.cadr(p3), defs_1.caddr(p3)), defs_1.caddr(p1));
+            return list_1.makeList(symbol_1.symbol(defs_1.DERIVATIVE), list_1.makeList(symbol_1.symbol(defs_1.DERIVATIVE), defs_1.cadr(p3), defs_1.caddr(p3)), defs_1.caddr(p1));
         }
         else {
-            return list_1.makeList(defs_1.symbol(defs_1.DERIVATIVE), list_1.makeList(defs_1.symbol(defs_1.DERIVATIVE), defs_1.cadr(p3), defs_1.caddr(p1)), defs_1.caddr(p3));
+            return list_1.makeList(symbol_1.symbol(defs_1.DERIVATIVE), list_1.makeList(symbol_1.symbol(defs_1.DERIVATIVE), defs_1.cadr(p3), defs_1.caddr(p1)), defs_1.caddr(p3));
         }
     }
     return derivative(p3, defs_1.caddr(p1));
@@ -300,8 +300,8 @@ function dd(p1, p2) {
 // derivative of a generic function
 function dfunction(p1, p2) {
     const p3 = defs_1.cdr(p1); // p3 is the argument list for the function
-    if (p3 === defs_1.symbol(defs_1.NIL) || find_1.Find(p3, p2)) {
-        return list_1.makeList(defs_1.symbol(defs_1.DERIVATIVE), p1, p2);
+    if (p3 === symbol_1.symbol(defs_1.NIL) || find_1.Find(p3, p2)) {
+        return list_1.makeList(symbol_1.symbol(defs_1.DERIVATIVE), p1, p2);
     }
     return defs_1.Constants.zero;
 }

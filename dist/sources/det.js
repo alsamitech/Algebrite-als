@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.determinant = exports.det = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const list_1 = require("./list");
 const multiply_1 = require("./multiply");
 const tensor_1 = require("./tensor");
+const symbol_1 = require("../runtime/symbol");
 /* det =====================================================================
 
 Tags
@@ -32,7 +32,7 @@ Example:
 */
 function det(p1) {
     if (!tensor_1.is_square_matrix(p1)) {
-        return list_1.makeList(defs_1.symbol(defs_1.DET), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.DET), p1);
     }
     const a = p1.tensor.elem;
     const isNumeric = a.every((element) => defs_1.isNumericAtom(element));
@@ -115,13 +115,11 @@ exports.determinant = determinant;
 //  out the columns below it.
 //
 //-----------------------------------------------------------------------------
-function detg() {
-    const p1 = stack_1.pop();
+function detg(p1) {
     if (!tensor_1.is_square_matrix(p1)) {
-        stack_1.push(list_1.makeList(defs_1.symbol(defs_1.DET), p1));
-        return;
+        return list_1.makeList(symbol_1.symbol(defs_1.DET), p1);
     }
-    stack_1.push(yydetg(p1));
+    return yydetg(p1);
 }
 function yydetg(p1) {
     const n = p1.tensor.dim[0];

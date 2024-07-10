@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_tan = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
@@ -11,12 +11,11 @@ const multiply_1 = require("./multiply");
 const power_1 = require("./power");
 // Tangent function of numerical and symbolic arguments
 function Eval_tan(p1) {
-    const result = tangent(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return tangent(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_tan = Eval_tan;
 function tangent(p1) {
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.ARCTAN)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.ARCTAN)) {
         return defs_1.cadr(p1);
     }
     if (defs_1.isdouble(p1)) {
@@ -44,7 +43,7 @@ function tangent(p1) {
     // happen for a round number of degrees. There are some exceptions
     // though, e.g. 22.5 degrees, which we don't capture here.
     if (n < 0 || isNaN(n)) {
-        return list_1.makeList(defs_1.symbol(defs_1.TAN), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.TAN), p1);
     }
     switch (n % 360) {
         case 0:
@@ -69,6 +68,6 @@ function tangent(p1) {
         case 300:
             return multiply_1.negate(power_1.power(bignum_1.integer(3), bignum_1.rational(1, 2)));
         default:
-            return list_1.makeList(defs_1.symbol(defs_1.TAN), p1);
+            return list_1.makeList(symbol_1.symbol(defs_1.TAN), p1);
     }
 }

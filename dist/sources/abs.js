@@ -4,7 +4,7 @@ exports.absval = exports.abs = exports.absValFloat = exports.Eval_abs = void 0;
 const defs_1 = require("../runtime/defs");
 const find_1 = require("../runtime/find");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -69,8 +69,7 @@ Notes
 */
 const DEBUG_ABS = false;
 function Eval_abs(p1) {
-    const result = abs(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return abs(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_abs = Eval_abs;
 function absValFloat(p1) {
@@ -128,7 +127,7 @@ function absval(p1) {
         }
         return p1;
     }
-    if (p1 === defs_1.symbol(defs_1.PI)) {
+    if (p1 === symbol_1.symbol(defs_1.PI)) {
         if (DEBUG_ABS) {
             console.log(` abs: ${p1} of PI`);
             console.log(` --> ABS of ${input} : ${p1}`);
@@ -185,7 +184,7 @@ function absval(p1) {
         return result;
     }
     // abs(e^something)
-    if (defs_1.ispower(p1) && defs_1.cadr(p1) === defs_1.symbol(defs_1.E)) {
+    if (defs_1.ispower(p1) && defs_1.cadr(p1) === symbol_1.symbol(defs_1.E)) {
         // exponential
         const result = misc_1.exponential(real_1.real(defs_1.caddr(p1)));
         if (DEBUG_ABS) {
@@ -203,8 +202,8 @@ function absval(p1) {
         }
         return result;
     }
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.ABS)) {
-        const absOfAbs = list_1.makeList(defs_1.symbol(defs_1.ABS), defs_1.cadr(p1));
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.ABS)) {
+        const absOfAbs = list_1.makeList(symbol_1.symbol(defs_1.ABS), defs_1.cadr(p1));
         if (DEBUG_ABS) {
             console.log(` abs: ${p1} is abs of a abs`);
             console.log(` --> ABS of ${input} : ${absOfAbs}`);
@@ -247,7 +246,7 @@ function absval(p1) {
     if (is_1.isnegativeterm(p1) || (defs_1.isadd(p1) && is_1.isnegativeterm(defs_1.cadr(p1)))) {
         p1 = multiply_1.negate(p1);
     }
-    const l = list_1.makeList(defs_1.symbol(defs_1.ABS), p1);
+    const l = list_1.makeList(symbol_1.symbol(defs_1.ABS), p1);
     if (DEBUG_ABS) {
         console.log(` abs: ${p1} is nothing decomposable`);
         console.log(` --> ABS of ${input} : ${l}`);

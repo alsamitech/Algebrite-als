@@ -2,16 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.areunivarpolysfactoredorexpandedform = exports.gcd = exports.Eval_gcd = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
+const factorpoly_1 = require("./factorpoly");
 const is_1 = require("./is");
+const list_1 = require("./list");
 const multiply_1 = require("./multiply");
 const power_1 = require("./power");
-const factorpoly_1 = require("./factorpoly");
-const list_1 = require("./list");
 // Greatest common denominator
 // can also be run on polynomials, however
 // it works only on the integers and it works
@@ -22,7 +22,7 @@ function Eval_gcd(p1) {
     if (defs_1.iscons(p1)) {
         result = p1.tail().reduce((acc, p) => gcd(acc, eval_1.Eval(p)), result);
     }
-    stack_1.push(result);
+    return result;
 }
 exports.Eval_gcd = Eval_gcd;
 function gcd(p1, p2) {
@@ -75,10 +75,10 @@ function gcd_polys(p1, p2, polyVar) {
     p2 = factorpoly_1.factorpoly(p2, polyVar);
     if (defs_1.ismultiply(p1) || defs_1.ismultiply(p2)) {
         if (!defs_1.ismultiply(p1)) {
-            p1 = list_1.makeList(defs_1.symbol(defs_1.MULTIPLY), p1, defs_1.Constants.one);
+            p1 = list_1.makeList(symbol_1.symbol(defs_1.MULTIPLY), p1, defs_1.Constants.one);
         }
         if (!defs_1.ismultiply(p2)) {
-            p2 = list_1.makeList(defs_1.symbol(defs_1.MULTIPLY), p2, defs_1.Constants.one);
+            p2 = list_1.makeList(symbol_1.symbol(defs_1.MULTIPLY), p2, defs_1.Constants.one);
         }
     }
     if (defs_1.ismultiply(p1) && defs_1.ismultiply(p2)) {

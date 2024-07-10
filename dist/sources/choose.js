@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_choose = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
@@ -34,8 +33,7 @@ For example, the number of five card hands is choose(52,5)
 function Eval_choose(p1) {
     const N = eval_1.Eval(defs_1.cadr(p1));
     const K = eval_1.Eval(defs_1.caddr(p1));
-    const result = choose(N, K);
-    stack_1.push(result);
+    return choose(N, K);
 }
 exports.Eval_choose = Eval_choose;
 function choose(N, K) {

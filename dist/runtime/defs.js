@@ -3,9 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.evalFloats = exports.evalPolar = exports.doexpand = exports.noexpand = exports.Constants = exports.$ = exports.reset_after_error = exports.MEQUAL = exports.MZERO = exports.MSIGN = exports.isidentitymatrix = exports.isinv = exports.istranspose = exports.isinnerordot = exports.isfactorial = exports.ispower = exports.ismultiply = exports.isadd = exports.caddaddr = exports.cdddaddr = exports.caddadr = exports.cddaddr = exports.cadaddr = exports.caddddr = exports.cddddr = exports.cadddr = exports.cdaddr = exports.caddar = exports.cadadr = exports.caaddr = exports.cdddr = exports.cddar = exports.cdadr = exports.cadar = exports.caddr = exports.caadr = exports.cddr = exports.cdar = exports.cadr = exports.caar = exports.cdr = exports.car = exports.iskeyword = exports.issymbol = exports.isNumericAtomOrTensor = exports.istensor = exports.isstr = exports.isNumericAtom = exports.isdouble = exports.isrational = exports.iscons = exports.symbol = exports.dotprod_unicode = exports.transpose_unicode = exports.isSymbolReclaimable = exports.binding = exports.symtab = exports.logbuf = exports.mtotal = exports.primetab = exports.parse_time_simplifications = exports.predefinedSymbolsInGlobalScope_doNotTrackInDependencies = exports.MAXDIM = exports.MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE = exports.MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES = exports.MAXPRIMETAB = exports.TOS = exports.E = exports.C6 = exports.C5 = exports.C4 = exports.C3 = exports.C2 = exports.C1 = exports.SYMBOL_X_UNDERSCORE = exports.SYMBOL_B_UNDERSCORE = exports.SYMBOL_A_UNDERSCORE = exports.SYMBOL_IDENTITY_MATRIX = exports.SYMBOL_Z = exports.SYMBOL_Y = exports.SYMBOL_X = exports.SYMBOL_T = exports.SYMBOL_S = exports.SYMBOL_R = exports.SYMBOL_N = exports.SYMBOL_J = exports.SYMBOL_I = exports.SYMBOL_D = exports.SYMBOL_C = exports.SYMBOL_B = exports.SYMBOL_A = exports.PI = exports.VERSION = exports.SECRETX = exports.METAX = exports.METAB = exports.METAA = exports.DRAWX = exports.YYE = exports.MAX_FIXED_PRINTOUT_DIGITS = exports.FORCE_FIXED_PRINTOUT = exports.TRACE = exports.ASSUME_REAL_VARIABLES = exports.BAKE = exports.AUTOEXPAND = exports.LAST_PLAIN_PRINT = exports.LAST_LIST_PRINT = exports.LAST_LATEX_PRINT = exports.LAST_FULL_PRINT = exports.LAST_2DASCII_PRINT = exports.LAST_PRINT = exports.LAST = exports.NIL = exports.ZERO = exports.UNIT = exports.TRANSPOSE = exports.TESTLT = exports.TESTLE = exports.TESTGT = exports.TESTGE = exports.TESTEQ = exports.TEST = exports.TAYLOR = exports.TANH = exports.TAN = exports.SYMBOLSINFO = exports.SUM = exports.SUBST = exports.STOP = exports.SQRT = exports.SHAPE = exports.SINH = exports.SIN = exports.SIMPLIFY = exports.SILENTPATTERN = exports.SGN = exports.SETQ = exports.ROOTS = exports.YYRECT = exports.ROUND = exports.REAL = exports.RATIONALIZE = exports.RANK = exports.QUOTIENT = exports.QUOTE = exports.PRODUCT = exports.PRINTPLAIN = exports.PRINTLIST = exports.PRINTLATEX = exports.PRINTFULL = exports.PRINT2DASCII = exports.PRINT = exports.PRINT_LEAVE_X_ALONE = exports.PRINT_LEAVE_E_ALONE = exports.PRIME = exports.POWER = exports.POLAR = exports.PATTERNSINFO = exports.PATTERN = exports.OUTER = exports.OR = exports.OPERATOR = exports.NUMERATOR = exports.NUMBER = exports.NROOTS = exports.NOT = exports.MULTIPLY = exports.MOD = exports.LOOKUP = exports.LOG = exports.LEGENDRE = exports.LEADING = exports.LCM = exports.LAGUERRE = exports.ISPRIME = exports.ISINTEGER = exports.INVG = exports.INV = exports.INTEGRAL = exports.INNER = exports.INDEX = exports.IMAG = exports.HILBERT = exports.HERMITE = exports.GCD = exports.GAMMA = exports.FUNCTION = exports.FOR = exports.FLOOR = exports.FLOATF = exports.FILTER = exports.FACTORPOLY = exports.FACTORIAL = exports.FACTOR = exports.EXPSIN = exports.EXPCOS = exports.EXPAND = exports.EXP = exports.EVAL = exports.ERFC = exports.ERF = exports.EIGENVEC = exports.EIGENVAL = exports.EIGEN = exports.DSOLVE = exports.DRAW = exports.DOT = exports.DO = exports.DIVISORS = exports.DIRAC = exports.DIM = exports.DET = exports.DERIVATIVE = exports.DENOMINATOR = exports.DEGREE = exports.DEFINT = exports.DECOMP = exports.COSH = exports.COS = exports.CONTRACT = exports.CONJ = exports.CONDENSE = exports.COFACTOR = exports.COEFF = exports.CLOCK = exports.CLEARPATTERNS = exports.CLEARALL = exports.CLEAR = exports.CIRCEXP = exports.CHOOSE = exports.CHECK = exports.CEILING = exports.BINOMIAL = exports.BINDING = exports.BESSELY = exports.BESSELJ = exports.ATOMIZE = exports.ARG = exports.ARCTANH = exports.ARCTAN = exports.ARCSINH = exports.ARCSIN = exports.ARCCOSH = exports.ARCCOS = exports.APPROXRATIO = exports.AND = exports.ADJ = exports.ADD = exports.ABS = exports.SYM = exports.TENSOR = exports.STR = exports.DOUBLE = exports.NUM = exports.CONS = exports.Sym = exports.Tensor = exports.Str = exports.Double = exports.Num = exports.Cons = exports.BaseAtom = exports.avoidCalculatingPowersIntoArctans = exports.do_simplify_nested_radicals = exports.dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = exports.defs = exports.PRINTMODE_LIST = exports.PRINTMODE_HUMAN = exports.PRINTMODE_COMPUTER = exports.PRINTMODE_2DASCII = exports.PRINTMODE_LATEX = exports.PRINTOUTRESULT = exports.DEBUG = exports.NSYM = exports.version = exports.breakpoint = void 0;
+exports.evalFloats = exports.evalPolar = exports.doexpand = exports.noexpand = exports.Constants = exports.$ = exports.reset_after_error = exports.MEQUAL = exports.MZERO = exports.MSIGN = exports.isidentitymatrix = exports.isinv = exports.istranspose = exports.isinnerordot = exports.isfactorial = exports.ispower = exports.ismultiply = exports.isadd = exports.caddaddr = exports.cdddaddr = exports.caddadr = exports.cddaddr = exports.cadaddr = exports.caddddr = exports.cddddr = exports.cadddr = exports.cdaddr = exports.caddar = exports.cadadr = exports.caaddr = exports.cdddr = exports.cddar = exports.cdadr = exports.cadar = exports.caddr = exports.caadr = exports.cddr = exports.cdar = exports.cadr = exports.caar = exports.cdr = exports.car = exports.issymbol = exports.isNumericAtomOrTensor = exports.istensor = exports.isstr = exports.isNumericAtom = exports.isdouble = exports.isrational = exports.iscons = exports.dotprod_unicode = exports.transpose_unicode = exports.logbuf = exports.mtotal = exports.primetab = exports.parse_time_simplifications = exports.predefinedSymbolsInGlobalScope_doNotTrackInDependencies = exports.MAXDIM = exports.MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE = exports.MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES = exports.MAXPRIMETAB = exports.E = exports.C6 = exports.C5 = exports.C4 = exports.C3 = exports.C2 = exports.C1 = exports.SYMBOL_X_UNDERSCORE = exports.SYMBOL_B_UNDERSCORE = exports.SYMBOL_A_UNDERSCORE = exports.SYMBOL_IDENTITY_MATRIX = exports.SYMBOL_Z = exports.SYMBOL_Y = exports.SYMBOL_X = exports.SYMBOL_T = exports.SYMBOL_S = exports.SYMBOL_R = exports.SYMBOL_N = exports.SYMBOL_J = exports.SYMBOL_I = exports.SYMBOL_D = exports.SYMBOL_C = exports.SYMBOL_B = exports.SYMBOL_A = exports.PI = exports.VERSION = exports.SECRETX = exports.METAX = exports.METAB = exports.METAA = exports.DRAWX = exports.YYE = exports.MAX_FIXED_PRINTOUT_DIGITS = exports.FORCE_FIXED_PRINTOUT = exports.TRACE = exports.ASSUME_REAL_VARIABLES = exports.BAKE = exports.AUTOEXPAND = exports.LAST_PLAIN_PRINT = exports.LAST_LIST_PRINT = exports.LAST_LATEX_PRINT = exports.LAST_FULL_PRINT = exports.LAST_2DASCII_PRINT = exports.LAST_PRINT = exports.LAST = exports.NIL = exports.ZERO = exports.UNIT = exports.TRANSPOSE = exports.TESTLT = exports.TESTLE = exports.TESTGT = exports.TESTGE = exports.TESTEQ = exports.TEST = exports.TAYLOR = exports.TANH = exports.TAN = exports.SYMBOLSINFO = exports.SUM = exports.SUBST = exports.STOP = exports.SQRT = exports.SHAPE = exports.SINH = exports.SIN = exports.SIMPLIFY = exports.SILENTPATTERN = exports.SGN = exports.SETQ = exports.ROOTS = exports.YYRECT = exports.ROUND = exports.REAL = exports.RATIONALIZE = exports.RANK = exports.QUOTIENT = exports.QUOTE = exports.PRODUCT = exports.PRINTPLAIN = exports.PRINTLIST = exports.PRINTLATEX = exports.PRINTFULL = exports.PRINT2DASCII = exports.PRINT = exports.PRINT_LEAVE_X_ALONE = exports.PRINT_LEAVE_E_ALONE = exports.PRIME = exports.POWER = exports.POLAR = exports.PATTERNSINFO = exports.PATTERN = exports.OUTER = exports.OR = exports.OPERATOR = exports.NUMERATOR = exports.NUMBER = exports.NROOTS = exports.NOT = exports.MULTIPLY = exports.MOD = exports.LOOKUP = exports.LOG = exports.LEGENDRE = exports.LEADING = exports.LCM = exports.LAGUERRE = exports.ISPRIME = exports.ISINTEGER = exports.INVG = exports.INV = exports.INTEGRAL = exports.INNER = exports.INDEX = exports.IMAG = exports.HILBERT = exports.HERMITE = exports.GCD = exports.GAMMA = exports.FUNCTION = exports.FOR = exports.FLOOR = exports.FLOATF = exports.FILTER = exports.FACTORPOLY = exports.FACTORIAL = exports.FACTOR = exports.EXPSIN = exports.EXPCOS = exports.EXPAND = exports.EXP = exports.EVAL = exports.ERFC = exports.ERF = exports.EIGENVEC = exports.EIGENVAL = exports.EIGEN = exports.DSOLVE = exports.DRAW = exports.DOT = exports.DO = exports.DIVISORS = exports.DIRAC = exports.DIM = exports.DET = exports.DERIVATIVE = exports.DENOMINATOR = exports.DEGREE = exports.DEFINT = exports.DECOMP = exports.COSH = exports.COS = exports.CONTRACT = exports.CONJ = exports.CONDENSE = exports.COFACTOR = exports.COEFF = exports.CLOCK = exports.CLEARPATTERNS = exports.CLEARALL = exports.CLEAR = exports.CIRCEXP = exports.CHOOSE = exports.CHECK = exports.CEILING = exports.BINOMIAL = exports.BINDING = exports.BESSELY = exports.BESSELJ = exports.ATOMIZE = exports.ARG = exports.ARCTANH = exports.ARCTAN = exports.ARCSINH = exports.ARCSIN = exports.ARCCOSH = exports.ARCCOS = exports.APPROXRATIO = exports.AND = exports.ADJ = exports.ADD = exports.ABS = exports.SYM = exports.TENSOR = exports.STR = exports.DOUBLE = exports.NUM = exports.CONS = exports.Sym = exports.Tensor = exports.Str = exports.Double = exports.Num = exports.Cons = exports.BaseAtom = exports.avoidCalculatingPowersIntoArctans = exports.do_simplify_nested_radicals = exports.dontCreateNewRadicalsInDenominatorWhenEvalingMultiplication = exports.defs = exports.PRINTMODE_LIST = exports.PRINTMODE_HUMAN = exports.PRINTMODE_COMPUTER = exports.PRINTMODE_2DASCII = exports.PRINTMODE_LATEX = exports.PRINTOUTRESULT = exports.DEBUG = exports.NSYM = exports.version = exports.breakpoint = void 0;
 const big_integer_1 = __importDefault(require("big-integer"));
-const stack_1 = require("./stack");
 const print_1 = require("../sources/print");
 const symbol_1 = require("./symbol");
 function breakpoint() { }
@@ -44,16 +43,11 @@ class Defs {
         // in the code due to call from Algebra block.
         // Currently not used.
         this.called_from_Algebra_block = false;
-        // top of stack
-        this.tos = 0;
         this.expanding = false;
         this.evaluatingAsFloats = false;
         this.evaluatingPolar = false;
         this.esc_flag = false;
         this.trigmode = 0;
-        // will contain *U
-        this.stack = [];
-        this.frame = 0;
         this.out_count = 0;
         this.test_flag = false;
         this.codeGen = false;
@@ -181,196 +175,191 @@ exports.SYM = 5;
 // the following enum is for indexing the symbol table
 // standard functions first, then nil, then everything else
 let counter = 0;
-exports.ABS = counter++;
-exports.ADD = counter++;
-exports.ADJ = counter++;
-exports.AND = counter++;
-exports.APPROXRATIO = counter++;
-exports.ARCCOS = counter++;
-exports.ARCCOSH = counter++;
-exports.ARCSIN = counter++;
-exports.ARCSINH = counter++;
-exports.ARCTAN = counter++;
-exports.ARCTANH = counter++;
-exports.ARG = counter++;
-exports.ATOMIZE = counter++;
-exports.BESSELJ = counter++;
-exports.BESSELY = counter++;
-exports.BINDING = counter++;
-exports.BINOMIAL = counter++;
-exports.CEILING = counter++;
-exports.CHECK = counter++;
-exports.CHOOSE = counter++;
-exports.CIRCEXP = counter++;
-exports.CLEAR = counter++;
-exports.CLEARALL = counter++;
-exports.CLEARPATTERNS = counter++;
-exports.CLOCK = counter++;
-exports.COEFF = counter++;
-exports.COFACTOR = counter++;
-exports.CONDENSE = counter++;
-exports.CONJ = counter++;
-exports.CONTRACT = counter++;
-exports.COS = counter++;
-exports.COSH = counter++;
-exports.DECOMP = counter++;
-exports.DEFINT = counter++;
-exports.DEGREE = counter++;
-exports.DENOMINATOR = counter++;
-exports.DERIVATIVE = counter++;
-exports.DET = counter++;
-exports.DIM = counter++;
-exports.DIRAC = counter++;
-exports.DIVISORS = counter++;
-exports.DO = counter++;
-exports.DOT = counter++;
-exports.DRAW = counter++;
-exports.DSOLVE = counter++;
-exports.EIGEN = counter++;
-exports.EIGENVAL = counter++;
-exports.EIGENVEC = counter++;
-exports.ERF = counter++;
-exports.ERFC = counter++;
-exports.EVAL = counter++;
-exports.EXP = counter++;
-exports.EXPAND = counter++;
-exports.EXPCOS = counter++;
-exports.EXPSIN = counter++;
-exports.FACTOR = counter++;
-exports.FACTORIAL = counter++;
-exports.FACTORPOLY = counter++;
-exports.FILTER = counter++;
-exports.FLOATF = counter++;
-exports.FLOOR = counter++;
-exports.FOR = counter++;
-exports.FUNCTION = counter++;
-exports.GAMMA = counter++;
-exports.GCD = counter++;
-exports.HERMITE = counter++;
-exports.HILBERT = counter++;
-exports.IMAG = counter++;
-exports.INDEX = counter++;
-exports.INNER = counter++;
-exports.INTEGRAL = counter++;
-exports.INV = counter++;
-exports.INVG = counter++;
-exports.ISINTEGER = counter++;
-exports.ISPRIME = counter++;
-exports.LAGUERRE = counter++;
-//  LAPLACE = counter++
-exports.LCM = counter++;
-exports.LEADING = counter++;
-exports.LEGENDRE = counter++;
-exports.LOG = counter++;
-exports.LOOKUP = counter++;
-exports.MOD = counter++;
-exports.MULTIPLY = counter++;
-exports.NOT = counter++;
-exports.NROOTS = counter++;
-exports.NUMBER = counter++;
-exports.NUMERATOR = counter++;
-exports.OPERATOR = counter++;
-exports.OR = counter++;
-exports.OUTER = counter++;
-exports.PATTERN = counter++;
-exports.PATTERNSINFO = counter++;
-exports.POLAR = counter++;
-exports.POWER = counter++;
-exports.PRIME = counter++;
-exports.PRINT_LEAVE_E_ALONE = counter++;
-exports.PRINT_LEAVE_X_ALONE = counter++;
-exports.PRINT = counter++;
-exports.PRINT2DASCII = counter++;
-exports.PRINTFULL = counter++;
-exports.PRINTLATEX = counter++;
-exports.PRINTLIST = counter++;
-exports.PRINTPLAIN = counter++;
-exports.PRODUCT = counter++;
-exports.QUOTE = counter++;
-exports.QUOTIENT = counter++;
-exports.RANK = counter++;
-exports.RATIONALIZE = counter++;
-exports.REAL = counter++;
-exports.ROUND = counter++;
-exports.YYRECT = counter++;
-exports.ROOTS = counter++;
-exports.SETQ = counter++;
-exports.SGN = counter++;
-exports.SILENTPATTERN = counter++;
-exports.SIMPLIFY = counter++;
-exports.SIN = counter++;
-exports.SINH = counter++;
-exports.SHAPE = counter++;
-exports.SQRT = counter++;
-exports.STOP = counter++;
-exports.SUBST = counter++;
-exports.SUM = counter++;
-exports.SYMBOLSINFO = counter++;
-exports.TAN = counter++;
-exports.TANH = counter++;
-exports.TAYLOR = counter++;
-exports.TEST = counter++;
-exports.TESTEQ = counter++;
-exports.TESTGE = counter++;
-exports.TESTGT = counter++;
-exports.TESTLE = counter++;
-exports.TESTLT = counter++;
-exports.TRANSPOSE = counter++;
-exports.UNIT = counter++;
-exports.ZERO = counter++;
+exports.ABS = 'abs';
+exports.ADD = 'add';
+exports.ADJ = 'adj';
+exports.AND = 'and';
+exports.APPROXRATIO = 'approxratio';
+exports.ARCCOS = 'arccos';
+exports.ARCCOSH = 'arccosh';
+exports.ARCSIN = 'arcsin';
+exports.ARCSINH = 'arcsinh';
+exports.ARCTAN = 'arctan';
+exports.ARCTANH = 'arctanh';
+exports.ARG = 'arg';
+exports.ATOMIZE = 'atomize';
+exports.BESSELJ = 'besselj';
+exports.BESSELY = 'bessely';
+exports.BINDING = 'binding';
+exports.BINOMIAL = 'binomial';
+exports.CEILING = 'ceiling';
+exports.CHECK = 'check';
+exports.CHOOSE = 'choose';
+exports.CIRCEXP = 'circexp';
+exports.CLEAR = 'clear';
+exports.CLEARALL = 'clearall';
+exports.CLEARPATTERNS = 'clearpatterns';
+exports.CLOCK = 'clock';
+exports.COEFF = 'coeff';
+exports.COFACTOR = 'cofactor';
+exports.CONDENSE = 'condense';
+exports.CONJ = 'conj';
+exports.CONTRACT = 'contract';
+exports.COS = 'cos';
+exports.COSH = 'cosh';
+exports.DECOMP = 'decomp';
+exports.DEFINT = 'defint';
+exports.DEGREE = 'deg';
+exports.DENOMINATOR = 'denominator';
+exports.DERIVATIVE = 'derivative';
+exports.DET = 'det';
+exports.DIM = 'dim';
+exports.DIRAC = 'dirac';
+exports.DIVISORS = 'divisors';
+exports.DO = 'do';
+exports.DOT = 'dot';
+exports.DRAW = 'draw';
+exports.DSOLVE = 'dsolve';
+exports.EIGEN = 'eigen';
+exports.EIGENVAL = 'eigenval';
+exports.EIGENVEC = 'eigenvec';
+exports.ERF = 'erf';
+exports.ERFC = 'erfc';
+exports.EVAL = 'eval';
+exports.EXP = 'exp';
+exports.EXPAND = 'expand';
+exports.EXPCOS = 'expcos';
+exports.EXPSIN = 'expsin';
+exports.FACTOR = 'factor';
+exports.FACTORIAL = 'factorial';
+exports.FACTORPOLY = 'factorpoly';
+exports.FILTER = 'filter';
+exports.FLOATF = 'float';
+exports.FLOOR = 'floor';
+exports.FOR = 'for';
+exports.FUNCTION = 'function';
+exports.GAMMA = 'Gamma';
+exports.GCD = 'gcd';
+exports.HERMITE = 'hermite';
+exports.HILBERT = 'hilbert';
+exports.IMAG = 'imag';
+exports.INDEX = 'component';
+exports.INNER = 'inner';
+exports.INTEGRAL = 'integral';
+exports.INV = 'inv';
+exports.INVG = 'invg';
+exports.ISINTEGER = 'isinteger';
+exports.ISPRIME = 'isprime';
+exports.LAGUERRE = 'laguerre';
+//  LAPLACE = 
+exports.LCM = 'lcm';
+exports.LEADING = 'leading';
+exports.LEGENDRE = 'legendre';
+exports.LOG = 'log';
+exports.LOOKUP = 'lookup';
+exports.MOD = 'mod';
+exports.MULTIPLY = 'multiply';
+exports.NOT = 'not';
+exports.NROOTS = 'nroots';
+exports.NUMBER = 'number';
+exports.NUMERATOR = 'numerator';
+exports.OPERATOR = 'operator';
+exports.OR = 'or';
+exports.OUTER = 'outer';
+exports.PATTERN = 'pattern';
+exports.PATTERNSINFO = 'patternsinfo';
+exports.POLAR = 'polar';
+exports.POWER = 'power';
+exports.PRIME = 'prime';
+exports.PRINT_LEAVE_E_ALONE = 'printLeaveEAlone';
+exports.PRINT_LEAVE_X_ALONE = 'printLeaveXAlone';
+exports.PRINT = 'print';
+exports.PRINT2DASCII = 'print2dascii';
+exports.PRINTFULL = 'printcomputer';
+exports.PRINTLATEX = 'printlatex';
+exports.PRINTLIST = 'printlist';
+exports.PRINTPLAIN = 'printhuman';
+exports.PRODUCT = 'product';
+exports.QUOTE = 'quote';
+exports.QUOTIENT = 'quotient';
+exports.RANK = 'rank';
+exports.RATIONALIZE = 'rationalize';
+exports.REAL = 'real';
+exports.ROUND = 'round';
+exports.YYRECT = 'rect';
+exports.ROOTS = 'roots';
+exports.SETQ = 'equals';
+exports.SGN = 'sgn';
+exports.SILENTPATTERN = 'silentpattern';
+exports.SIMPLIFY = 'simplify';
+exports.SIN = 'sin';
+exports.SINH = 'sinh';
+exports.SHAPE = 'shape';
+exports.SQRT = 'sqrt';
+exports.STOP = 'stop';
+exports.SUBST = 'subst';
+exports.SUM = 'sum';
+exports.SYMBOLSINFO = 'symbolsinfo';
+exports.TAN = 'tan';
+exports.TANH = 'tanh';
+exports.TAYLOR = 'taylor';
+exports.TEST = 'test';
+exports.TESTEQ = 'testeq';
+exports.TESTGE = 'testge';
+exports.TESTGT = 'testgt';
+exports.TESTLE = 'testle';
+exports.TESTLT = 'testlt';
+exports.TRANSPOSE = 'transpose';
+exports.UNIT = 'unit';
+exports.ZERO = 'zero';
 // ALL THE SYMBOLS ABOVE NIL ARE KEYWORDS,
 // WHICH MEANS THAT USER CANNOT REDEFINE THEM
-exports.NIL = counter++; // nil goes here, after standard functions
-exports.LAST = counter++;
-exports.LAST_PRINT = counter++;
-exports.LAST_2DASCII_PRINT = counter++;
-exports.LAST_FULL_PRINT = counter++;
-exports.LAST_LATEX_PRINT = counter++;
-exports.LAST_LIST_PRINT = counter++;
-exports.LAST_PLAIN_PRINT = counter++;
-exports.AUTOEXPAND = counter++;
-exports.BAKE = counter++;
-exports.ASSUME_REAL_VARIABLES = counter++;
-exports.TRACE = counter++;
-exports.FORCE_FIXED_PRINTOUT = counter++;
-exports.MAX_FIXED_PRINTOUT_DIGITS = counter++;
-exports.YYE = counter++;
-exports.DRAWX = counter++; // special purpose internal symbols
-exports.METAA = counter++;
-exports.METAB = counter++;
-exports.METAX = counter++;
-exports.SECRETX = counter++;
-exports.VERSION = counter++;
-exports.PI = counter++;
-exports.SYMBOL_A = counter++;
-exports.SYMBOL_B = counter++;
-exports.SYMBOL_C = counter++;
-exports.SYMBOL_D = counter++;
-exports.SYMBOL_I = counter++;
-exports.SYMBOL_J = counter++;
-exports.SYMBOL_N = counter++;
-exports.SYMBOL_R = counter++;
-exports.SYMBOL_S = counter++;
-exports.SYMBOL_T = counter++;
-exports.SYMBOL_X = counter++;
-exports.SYMBOL_Y = counter++;
-exports.SYMBOL_Z = counter++;
-exports.SYMBOL_IDENTITY_MATRIX = counter++;
-exports.SYMBOL_A_UNDERSCORE = counter++;
-exports.SYMBOL_B_UNDERSCORE = counter++;
-exports.SYMBOL_X_UNDERSCORE = counter++;
-exports.C1 = counter++;
-exports.C2 = counter++;
-exports.C3 = counter++;
-exports.C4 = counter++;
-exports.C5 = counter++;
-exports.C6 = counter++;
-const USR_SYMBOLS = counter++; // this must be last
+exports.NIL = 'nil'; // nil goes here, after standard functions
+exports.LAST = 'last';
+exports.LAST_PRINT = 'lastprint';
+exports.LAST_2DASCII_PRINT = 'last2dasciiprint';
+exports.LAST_FULL_PRINT = 'lastfullprint';
+exports.LAST_LATEX_PRINT = 'lastlatexprint';
+exports.LAST_LIST_PRINT = 'lastlistprint';
+exports.LAST_PLAIN_PRINT = 'lastplainprint';
+exports.AUTOEXPAND = 'autoexpand';
+exports.BAKE = 'bake';
+exports.ASSUME_REAL_VARIABLES = 'assumeRealVariables';
+exports.TRACE = 'trace';
+exports.FORCE_FIXED_PRINTOUT = 'forceFixedPrintout';
+exports.MAX_FIXED_PRINTOUT_DIGITS = 'maxFixedPrintoutDigits';
+exports.YYE = '~'; // tilde so sort puts it after other symbols
+exports.DRAWX = '$DRAWX'; // special purpose internal symbols
+exports.METAA = '$METAA';
+exports.METAB = '$METAB';
+exports.METAX = '$METAX';
+exports.SECRETX = '$SECRETX';
+exports.VERSION = 'version';
+exports.PI = 'pi';
+exports.SYMBOL_A = 'a';
+exports.SYMBOL_B = 'b';
+exports.SYMBOL_C = 'c';
+exports.SYMBOL_D = 'd';
+exports.SYMBOL_I = 'i';
+exports.SYMBOL_J = 'j';
+exports.SYMBOL_N = 'n';
+exports.SYMBOL_R = 'r';
+exports.SYMBOL_S = 's';
+exports.SYMBOL_T = 't';
+exports.SYMBOL_X = 'x';
+exports.SYMBOL_Y = 'y';
+exports.SYMBOL_Z = 'z';
+exports.SYMBOL_IDENTITY_MATRIX = 'I';
+exports.SYMBOL_A_UNDERSCORE = 'a_';
+exports.SYMBOL_B_UNDERSCORE = 'b_';
+exports.SYMBOL_X_UNDERSCORE = 'x_';
+exports.C1 = '$C1';
+exports.C2 = '$C2';
+exports.C3 = '$C3';
+exports.C4 = '$C4';
+exports.C5 = '$C5';
+exports.C6 = '$C6';
 exports.E = exports.YYE;
-// TOS cannot be arbitrarily large because the OS seg faults on deep recursion.
-// For example, a circular evaluation like x=x+1 can cause a seg fault.
-// At this setting (100,000) the evaluation stack overruns before seg fault.
-exports.TOS = 100000;
 exports.MAXPRIMETAB = 10000;
 exports.MAX_CONSECUTIVE_APPLICATIONS_OF_ALL_RULES = 5;
 exports.MAX_CONSECUTIVE_APPLICATIONS_OF_SINGLE_RULE = 10;
@@ -433,20 +422,10 @@ exports.primetab = (function () {
 let draw_flag = false;
 exports.mtotal = 0;
 exports.logbuf = '';
-// will contain the variable names
-exports.symtab = [];
-// will contain the contents of the variable
-// in the corresponding position in symtab array
-exports.binding = [];
-exports.isSymbolReclaimable = [];
 const arglist = []; // will contain U
 const draw_stop_return = null; // extern jmp_buf ?????
 exports.transpose_unicode = 7488;
 exports.dotprod_unicode = 183;
-function symbol(x) {
-    return exports.symtab[x];
-}
-exports.symbol = symbol;
 function iscons(p) {
     return p.k === exports.CONS;
 }
@@ -474,7 +453,7 @@ exports.istensor = istensor;
 // because of recursion, we consider a scalar to be
 // a tensor, so a numeric scalar will return true
 function isNumericAtomOrTensor(p) {
-    if (isNumericAtom(p) || p === symbol(exports.SYMBOL_IDENTITY_MATRIX)) {
+    if (isNumericAtom(p) || p === symbol_1.symbol(exports.SYMBOL_IDENTITY_MATRIX)) {
         return true;
     }
     if (!istensor(p)) {
@@ -496,16 +475,12 @@ function issymbol(p) {
     return p.k === exports.SYM;
 }
 exports.issymbol = issymbol;
-function iskeyword(p) {
-    return issymbol(p) && symbol_1.symnum(p) < exports.NIL;
-}
-exports.iskeyword = iskeyword;
 function car(p) {
     if (iscons(p)) {
         return p.cons.car;
     }
     else {
-        return symbol(exports.NIL);
+        return symbol_1.symbol(exports.NIL);
     }
 }
 exports.car = car;
@@ -514,7 +489,7 @@ function cdr(p) {
         return p.cons.cdr;
     }
     else {
-        return symbol(exports.NIL);
+        return symbol_1.symbol(exports.NIL);
     }
 }
 exports.cdr = cdr;
@@ -607,38 +582,38 @@ function caddaddr(p) {
 }
 exports.caddaddr = caddaddr;
 function isadd(p) {
-    return car(p) === symbol(exports.ADD);
+    return car(p) === symbol_1.symbol(exports.ADD);
 }
 exports.isadd = isadd;
 function ismultiply(p) {
-    return car(p) === symbol(exports.MULTIPLY);
+    return car(p) === symbol_1.symbol(exports.MULTIPLY);
 }
 exports.ismultiply = ismultiply;
 function ispower(p) {
-    return car(p) === symbol(exports.POWER);
+    return car(p) === symbol_1.symbol(exports.POWER);
 }
 exports.ispower = ispower;
 function isfactorial(p) {
-    return car(p) === symbol(exports.FACTORIAL);
+    return car(p) === symbol_1.symbol(exports.FACTORIAL);
 }
 exports.isfactorial = isfactorial;
 function isinnerordot(p) {
-    return car(p) === symbol(exports.INNER) || car(p) === symbol(exports.DOT);
+    return car(p) === symbol_1.symbol(exports.INNER) || car(p) === symbol_1.symbol(exports.DOT);
 }
 exports.isinnerordot = isinnerordot;
 function istranspose(p) {
-    return car(p) === symbol(exports.TRANSPOSE);
+    return car(p) === symbol_1.symbol(exports.TRANSPOSE);
 }
 exports.istranspose = istranspose;
 function isinv(p) {
-    return car(p) === symbol(exports.INV);
+    return car(p) === symbol_1.symbol(exports.INV);
 }
 exports.isinv = isinv;
 // TODO this is a bit of a shallow check, we should
 // check when we are passed an actual tensor and possibly
 // cache the test result.
 function isidentitymatrix(p) {
-    return p === symbol(exports.SYMBOL_IDENTITY_MATRIX);
+    return p === symbol_1.symbol(exports.SYMBOL_IDENTITY_MATRIX);
 }
 exports.isidentitymatrix = isidentitymatrix;
 function MSIGN(p) {
@@ -668,10 +643,8 @@ function MEQUAL(p, n) {
 }
 exports.MEQUAL = MEQUAL;
 function reset_after_error() {
-    stack_1.moveTos(0);
     exports.defs.esc_flag = false;
     draw_flag = false;
-    exports.defs.frame = exports.TOS;
     exports.defs.evaluatingAsFloats = false;
     exports.defs.evaluatingPolar = false;
 }
@@ -690,7 +663,7 @@ class Constants {
         return exports.defs.evaluatingAsFloats ? Constants.zeroAsDouble : Constants.zero;
     }
     static Pi() {
-        return exports.defs.evaluatingAsFloats ? Constants.piAsDouble : symbol(exports.PI);
+        return exports.defs.evaluatingAsFloats ? Constants.piAsDouble : symbol_1.symbol(exports.PI);
     }
 }
 exports.Constants = Constants;

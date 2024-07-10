@@ -1,18 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rationalize = exports.Eval_rationalize = void 0;
-const gcd_1 = require("./gcd");
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const add_1 = require("./add");
 const condense_1 = require("./condense");
 const eval_1 = require("./eval");
+const gcd_1 = require("./gcd");
 const is_1 = require("./is");
 const multiply_1 = require("./multiply");
 const tensor_1 = require("./tensor");
 function Eval_rationalize(p1) {
-    const result = rationalize(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return rationalize(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_rationalize = Eval_rationalize;
 function rationalize(p) {

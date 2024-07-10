@@ -1,17 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.yycondense = exports.Condense = exports.Eval_condense = void 0;
-const gcd_1 = require("./gcd");
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
+const gcd_1 = require("./gcd");
 const multiply_1 = require("./multiply");
 // Condense an expression by factoring common terms.
 function Eval_condense(p1) {
-    const result = Condense(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return Condense(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_condense = Eval_condense;
 function Condense(p1) {

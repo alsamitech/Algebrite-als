@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.negate_noexpand = exports.negate = exports.reciprocate = exports.inverse = exports.divide = exports.multiply_all_noexpand = exports.multiply_all = exports.multiply_noexpand = exports.multiply = exports.Eval_multiply = void 0;
 const defs_1 = require("../runtime/defs");
+const otherCFunctions_1 = require("../runtime/otherCFunctions");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
@@ -12,7 +13,6 @@ const is_1 = require("./is");
 const list_1 = require("./list");
 const power_1 = require("./power");
 const tensor_1 = require("./tensor");
-const otherCFunctions_1 = require("../runtime/otherCFunctions");
 // Symbolic multiplication
 // multiplication is commutative, so it can't be used
 // e.g. on two matrices.
@@ -29,7 +29,7 @@ function Eval_multiply(p1) {
     if (defs_1.iscons(p1)) {
         temp = [...p1].reduce((acc, p) => multiply(acc, eval_1.Eval(p)), temp);
     }
-    stack_1.push(temp);
+    return temp;
 }
 exports.Eval_multiply = Eval_multiply;
 // this one doesn't eval the factors,
@@ -46,7 +46,6 @@ function multiply(arg1, arg2) {
 }
 exports.multiply = multiply;
 function yymultiply(p1, p2) {
-    const h = defs_1.defs.tos;
     // is either operand zero?
     if (is_1.isZeroAtom(p1) || is_1.isZeroAtom(p2)) {
         return defs_1.Constants.Zero();
@@ -74,30 +73,31 @@ function yymultiply(p1, p2) {
     // adjust operands
     p1 = defs_1.ismultiply(p1) ? defs_1.cdr(p1) : list_1.makeList(p1);
     p2 = defs_1.ismultiply(p2) ? defs_1.cdr(p2) : list_1.makeList(p2);
+    const factors = [];
     // handle numerical coefficients
     if (defs_1.isNumericAtom(defs_1.car(p1)) && defs_1.isNumericAtom(defs_1.car(p2))) {
         const arg1 = defs_1.car(p1);
         const arg2 = defs_1.car(p2);
-        stack_1.push(bignum_1.multiply_numbers(arg1, arg2));
+        factors.push(bignum_1.multiply_numbers(arg1, arg2));
         p1 = defs_1.cdr(p1);
         p2 = defs_1.cdr(p2);
     }
     else if (defs_1.isNumericAtom(defs_1.car(p1))) {
-        stack_1.push(defs_1.car(p1));
+        factors.push(defs_1.car(p1));
         p1 = defs_1.cdr(p1);
     }
     else if (defs_1.isNumericAtom(defs_1.car(p2))) {
-        stack_1.push(defs_1.car(p2));
+        factors.push(defs_1.car(p2));
         p2 = defs_1.cdr(p2);
     }
     else {
-        stack_1.push(defs_1.Constants.One());
+        factors.push(defs_1.Constants.One());
     }
     let [p3, p5] = parse_p1(p1);
     let [p4, p6] = parse_p2(p2);
     while (defs_1.iscons(p1) && defs_1.iscons(p2)) {
-        if (defs_1.caar(p1) === defs_1.symbol(defs_1.OPERATOR) && defs_1.caar(p2) === defs_1.symbol(defs_1.OPERATOR)) {
-            stack_1.push(new defs_1.Cons(defs_1.symbol(defs_1.OPERATOR), otherCFunctions_1.append(defs_1.cdar(p1), defs_1.cdar(p2))));
+        if (defs_1.caar(p1) === symbol_1.symbol(defs_1.OPERATOR) && defs_1.caar(p2) === symbol_1.symbol(defs_1.OPERATOR)) {
+            factors.push(new defs_1.Cons(symbol_1.symbol(defs_1.OPERATOR), otherCFunctions_1.append(defs_1.cdar(p1), defs_1.cdar(p2))));
             p1 = defs_1.cdr(p1);
             p2 = defs_1.cdr(p2);
             [p3, p5] = parse_p1(p1);
@@ -106,17 +106,17 @@ function yymultiply(p1, p2) {
         }
         switch (misc_1.cmp_expr(p3, p4)) {
             case -1:
-                stack_1.push(defs_1.car(p1));
+                factors.push(defs_1.car(p1));
                 p1 = defs_1.cdr(p1);
                 [p3, p5] = parse_p1(p1);
                 break;
             case 1:
-                stack_1.push(defs_1.car(p2));
+                factors.push(defs_1.car(p2));
                 p2 = defs_1.cdr(p2);
                 [p4, p6] = parse_p2(p2);
                 break;
             case 0:
-                combine_factors(h, p4, p5, p6);
+                combine_factors(factors, p4, p5, p6);
                 p1 = defs_1.cdr(p1);
                 p2 = defs_1.cdr(p2);
                 [p3, p5] = parse_p1(p1);
@@ -127,19 +127,17 @@ function yymultiply(p1, p2) {
         }
     }
     // push remaining factors, if any
-    const remaining = [];
     if (defs_1.iscons(p1)) {
-        remaining.push(...p1);
+        factors.push(...p1);
     }
     if (defs_1.iscons(p2)) {
-        remaining.push(...p2);
+        factors.push(...p2);
     }
-    stack_1.push_all(remaining);
     // normalize radical factors
     // example: 2*2(-1/2) -> 2^(1/2)
     // must be done after merge because merge may produce radical
     // example: 2^(1/2-a)*2^a -> 2^(1/2)
-    __normalize_radical_factors(h);
+    __normalize_radical_factors(factors);
     // this hack should not be necessary, unless power returns a multiply
     //for (i = h; i < tos; i++) {
     //  if (car(stack[i]) == symbol(MULTIPLY)) {
@@ -148,34 +146,29 @@ function yymultiply(p1, p2) {
     //  }
     //}
     if (defs_1.defs.expanding) {
-        for (let i = h; i < defs_1.defs.tos; i++) {
-            if (defs_1.isadd(defs_1.defs.stack[i])) {
-                const arr = stack_1.pop_n_items(defs_1.defs.tos - h);
-                return multiply_all(arr);
+        for (let i = 0; i < factors.length; i++) {
+            if (defs_1.isadd(factors[i])) {
+                return multiply_all(factors);
             }
         }
     }
     // n is the number of result factors on the stack
-    const n = defs_1.defs.tos - h;
+    const n = factors.length;
     if (n === 1) {
-        return stack_1.pop();
+        return factors.pop();
     }
     // discard integer 1
-    if (defs_1.isrational(defs_1.defs.stack[h]) && is_1.equaln(defs_1.defs.stack[h], 1)) {
+    if (defs_1.isrational(factors[0]) && is_1.equaln(factors[0], 1)) {
         if (n === 2) {
-            const p7 = stack_1.pop();
-            stack_1.pop();
+            const p7 = factors.pop();
             return p7;
         }
         else {
-            defs_1.defs.stack[h] = defs_1.symbol(defs_1.MULTIPLY);
-            list_1.list(n);
-            return stack_1.pop();
+            factors[0] = symbol_1.symbol(defs_1.MULTIPLY);
+            return list_1.makeList(...factors);
         }
     }
-    list_1.list(n);
-    const p7 = stack_1.pop();
-    return new defs_1.Cons(defs_1.symbol(defs_1.MULTIPLY), p7);
+    return new defs_1.Cons(symbol_1.symbol(defs_1.MULTIPLY), list_1.makeList(...factors));
 }
 // Decompose a factor into base and power.
 //
@@ -208,25 +201,25 @@ function parse_p2(p2) {
     return [p4, p6];
 }
 // h an integer
-function combine_factors(h, p4, p5, p6) {
+function combine_factors(factors, p4, p5, p6) {
     let p7 = power_1.power(p4, add_1.add(p5, p6));
     if (defs_1.isNumericAtom(p7)) {
-        defs_1.defs.stack[h] = bignum_1.multiply_numbers(defs_1.defs.stack[h], p7);
+        factors[0] = bignum_1.multiply_numbers(factors[0], p7);
     }
     else if (defs_1.ismultiply(p7)) {
         // power can return number * factor (i.e. -1 * i)
-        if (defs_1.isNumericAtom(defs_1.cadr(p7)) && defs_1.cdddr(p7) === defs_1.symbol(defs_1.NIL)) {
-            const arg1 = defs_1.defs.stack[h];
+        if (defs_1.isNumericAtom(defs_1.cadr(p7)) && defs_1.cdddr(p7) === symbol_1.symbol(defs_1.NIL)) {
+            const arg1 = factors[0];
             const arg2 = defs_1.cadr(p7);
-            defs_1.defs.stack[h] = bignum_1.multiply_numbers(arg1, arg2);
-            stack_1.push(defs_1.caddr(p7));
+            factors[0] = bignum_1.multiply_numbers(arg1, arg2);
+            factors.push(defs_1.caddr(p7));
         }
         else {
-            stack_1.push(p7);
+            factors.push(p7);
         }
     }
     else {
-        stack_1.push(p7);
+        factors.push(p7);
     }
 }
 const gp = [
@@ -346,36 +339,35 @@ exports.negate_noexpand = negate_noexpand;
 //  These properties are assured by the power function.
 //
 //-----------------------------------------------------------------------------
-// h is an int
-function __normalize_radical_factors(h) {
+function __normalize_radical_factors(factors) {
     let i = 0;
     // if coeff is 1 or floating then don't bother
-    if (is_1.isplusone(defs_1.defs.stack[h]) ||
-        is_1.isminusone(defs_1.defs.stack[h]) ||
-        defs_1.isdouble(defs_1.defs.stack[h])) {
+    if (is_1.isplusone(factors[0]) ||
+        is_1.isminusone(factors[0]) ||
+        defs_1.isdouble(factors[0])) {
         return;
     }
     // if no radicals then don't bother
-    for (i = h + 1; i < defs_1.defs.tos; i++) {
-        if (__is_radical_number(defs_1.defs.stack[i])) {
+    for (i = 1; i < factors.length; i++) {
+        if (__is_radical_number(factors[i])) {
             break;
         }
     }
-    if (i === defs_1.defs.tos) {
+    if (i === factors.length) {
         return;
     }
     // numerator
-    let A = bignum_1.mp_numerator(defs_1.defs.stack[h]);
+    let A = bignum_1.mp_numerator(factors[0]);
     //console.log("__normalize_radical_factors numerator: " + stack[tos-1])
-    for (let i = h + 1; i < defs_1.defs.tos; i++) {
+    for (let i = 1; i < factors.length; i++) {
         if (is_1.isplusone(A) || is_1.isminusone(A)) {
             break;
         }
-        if (!__is_radical_number(defs_1.defs.stack[i])) {
+        if (!__is_radical_number(factors[i])) {
             continue;
         }
-        const BASE = defs_1.cadr(defs_1.defs.stack[i]);
-        const EXPO = defs_1.caddr(defs_1.defs.stack[i]);
+        const BASE = defs_1.cadr(factors[i]);
+        const EXPO = defs_1.caddr(factors[i]);
         // exponent must be negative
         if (!is_1.isnegativenumber(EXPO)) {
             continue;
@@ -388,20 +380,20 @@ function __normalize_radical_factors(h) {
         // reduce numerator
         A = TMP;
         // invert radical
-        defs_1.defs.stack[i] = list_1.makeList(defs_1.symbol(defs_1.POWER), BASE, add_1.add(defs_1.Constants.One(), EXPO));
+        factors[i] = list_1.makeList(symbol_1.symbol(defs_1.POWER), BASE, add_1.add(defs_1.Constants.One(), EXPO));
     }
     // denominator
-    let B = bignum_1.mp_denominator(defs_1.defs.stack[h]);
+    let B = bignum_1.mp_denominator(factors[0]);
     //console.log("__normalize_radical_factors denominator: " + stack[tos-1])
-    for (let i = h + 1; i < defs_1.defs.tos; i++) {
+    for (let i = 1; i < factors.length; i++) {
         if (is_1.isplusone(B)) {
             break;
         }
-        if (!__is_radical_number(defs_1.defs.stack[i])) {
+        if (!__is_radical_number(factors[i])) {
             continue;
         }
-        const BASE = defs_1.cadr(defs_1.defs.stack[i]);
-        const EXPO = defs_1.caddr(defs_1.defs.stack[i]);
+        const BASE = defs_1.cadr(factors[i]);
+        const EXPO = defs_1.caddr(factors[i]);
         // exponent must be positive
         if (is_1.isnegativenumber(EXPO)) {
             continue;
@@ -435,10 +427,10 @@ function __normalize_radical_factors(h) {
         }
         //console.log("__new radical exponent: " + stack[tos-1])
         // invert radical
-        defs_1.defs.stack[i] = list_1.makeList(defs_1.symbol(defs_1.POWER), BASE, subtracted);
+        factors[i] = list_1.makeList(symbol_1.symbol(defs_1.POWER), BASE, subtracted);
     }
     // reconstitute the coefficient
-    defs_1.defs.stack[h] = divide(A, B);
+    factors[0] = divide(A, B);
 }
 // don't include i
 function __is_radical_number(p) {

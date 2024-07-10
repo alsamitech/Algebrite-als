@@ -8,6 +8,7 @@ const big_integer_1 = __importDefault(require("big-integer"));
 const defs_1 = require("../runtime/defs");
 const mcmp_1 = require("../runtime/mcmp");
 const run_1 = require("../runtime/run");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const is_1 = require("./is");
 const list_1 = require("./list");
@@ -24,15 +25,10 @@ function factor_number(p1) {
     }
     n_factor_number = p1.q.a;
     const factors = factor_a();
-    if (factors.length === 0) {
-        //
-    }
-    if (factors.length === 1) {
+    if (factors.length == 1) {
         return factors[0];
     }
-    if (factors.length > 1) {
-        return new defs_1.Cons(defs_1.symbol(defs_1.MULTIPLY), list_1.makeList(...factors));
-    }
+    return list_1.makeList(symbol_1.symbol(defs_1.MULTIPLY), ...factors);
 }
 exports.factor_number = factor_number;
 // factor using table look-up, then switch to rho method if necessary
@@ -142,7 +138,7 @@ function factor_b() {
 function _factor(d, count) {
     let factor = new defs_1.Num(d);
     if (count > 1) {
-        factor = list_1.makeList(defs_1.symbol(defs_1.POWER), factor, new defs_1.Num(bignum_1.mint(count)));
+        factor = list_1.makeList(symbol_1.symbol(defs_1.POWER), factor, new defs_1.Num(bignum_1.mint(count)));
     }
     return factor;
 }

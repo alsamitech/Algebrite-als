@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.besselj = exports.Eval_besselj = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const otherCFunctions_1 = require("../runtime/otherCFunctions");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const cos_1 = require("./cos");
@@ -12,7 +13,6 @@ const list_1 = require("./list");
 const multiply_1 = require("./multiply");
 const power_1 = require("./power");
 const sin_1 = require("./sin");
-const otherCFunctions_1 = require("../runtime/otherCFunctions");
 /* besselj =====================================================================
 
 Tags
@@ -52,8 +52,7 @@ Examples:
 
 */
 function Eval_besselj(p1) {
-    const result = besselj(eval_1.Eval(defs_1.cadr(p1)), eval_1.Eval(defs_1.caddr(p1)));
-    stack_1.push(result);
+    return besselj(eval_1.Eval(defs_1.cadr(p1)), eval_1.Eval(defs_1.caddr(p1)));
 }
 exports.Eval_besselj = Eval_besselj;
 function besselj(p1, p2) {
@@ -81,14 +80,14 @@ function yybesselj(X, N) {
         if (defs_1.MEQUAL(N.q.a, 1)) {
             const twoOverPi = defs_1.defs.evaluatingAsFloats
                 ? bignum_1.double(2.0 / Math.PI)
-                : multiply_1.divide(bignum_1.integer(2), defs_1.symbol(defs_1.PI));
+                : multiply_1.divide(bignum_1.integer(2), symbol_1.symbol(defs_1.PI));
             return multiply_1.multiply(power_1.power(multiply_1.divide(twoOverPi, X), bignum_1.rational(1, 2)), sin_1.sine(X));
         }
         // n = -1/2
         if (defs_1.MEQUAL(N.q.a, -1)) {
             const twoOverPi = defs_1.defs.evaluatingAsFloats
                 ? bignum_1.double(2.0 / Math.PI)
-                : multiply_1.divide(bignum_1.integer(2), defs_1.symbol(defs_1.PI));
+                : multiply_1.divide(bignum_1.integer(2), symbol_1.symbol(defs_1.PI));
             return multiply_1.multiply(power_1.power(multiply_1.divide(twoOverPi, X), bignum_1.rational(1, 2)), cos_1.cosine(X));
         }
         // besselj(x,n) = (2/x) (n-sgn(n)) besselj(x,n-sgn(n)) - besselj(x,n-2*sgn(n))
@@ -97,10 +96,10 @@ function yybesselj(X, N) {
     }
     //if 0 # test cases needed
     if (is_1.isnegativeterm(X)) {
-        return multiply_1.multiply(multiply_1.multiply(power_1.power(multiply_1.negate(X), N), power_1.power(X, multiply_1.negate(N))), list_1.makeList(defs_1.symbol(defs_1.BESSELJ), multiply_1.negate(X), N));
+        return multiply_1.multiply(multiply_1.multiply(power_1.power(multiply_1.negate(X), N), power_1.power(X, multiply_1.negate(N))), list_1.makeList(symbol_1.symbol(defs_1.BESSELJ), multiply_1.negate(X), N));
     }
     if (is_1.isnegativeterm(N)) {
-        return multiply_1.multiply(power_1.power(defs_1.Constants.negOne, N), list_1.makeList(defs_1.symbol(defs_1.BESSELJ), X, multiply_1.negate(N)));
+        return multiply_1.multiply(power_1.power(defs_1.Constants.negOne, N), list_1.makeList(symbol_1.symbol(defs_1.BESSELJ), X, multiply_1.negate(N)));
     }
-    return list_1.makeList(defs_1.symbol(defs_1.BESSELJ), X, N);
+    return list_1.makeList(symbol_1.symbol(defs_1.BESSELJ), X, N);
 }

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.factor_small_number = exports.factor = exports.Eval_factor = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
 const factorpoly_1 = require("./factorpoly");
@@ -15,14 +15,14 @@ const pollard_1 = require("./pollard");
 function Eval_factor(p1) {
     const top = eval_1.Eval(defs_1.cadr(p1));
     const p2 = eval_1.Eval(defs_1.caddr(p1));
-    const variable = p2 === defs_1.symbol(defs_1.NIL) ? guess_1.guess(top) : p2;
+    const variable = p2 === symbol_1.symbol(defs_1.NIL) ? guess_1.guess(top) : p2;
     let temp = factor(top, variable);
     // more factoring?
     p1 = defs_1.cdddr(p1);
     if (defs_1.iscons(p1)) {
         temp = [...p1].reduce((acc, p) => factor_again(acc, eval_1.Eval(p)), temp);
     }
-    stack_1.push(temp);
+    return temp;
 }
 exports.Eval_factor = Eval_factor;
 function factor_again(p1, p2) {

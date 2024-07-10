@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_eigenvec = exports.Eval_eigenval = exports.Eval_eigen = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -105,7 +104,7 @@ function Eval_eigen(p1) {
     symbol_1.set_binding(p1, p2);
     p1 = symbol_1.usr_symbol('Q');
     symbol_1.set_binding(p1, p3);
-    stack_1.push(defs_1.symbol(defs_1.NIL));
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_eigen = Eval_eigen;
 /* eigenval =====================================================================
@@ -124,18 +123,14 @@ Compute eigenvalues of m. See "eigen" for more info.
 
 */
 function Eval_eigenval(p1) {
-    const result = _eigenval(p1);
-    stack_1.push(result);
-}
-exports.Eval_eigenval = Eval_eigenval;
-function _eigenval(p1) {
     const { arg, invalid } = EIG_check_arg(p1);
     if (invalid) {
-        return list_1.makeList(defs_1.symbol(defs_1.EIGENVAL), invalid);
+        return list_1.makeList(symbol_1.symbol(defs_1.EIGENVAL), invalid);
     }
     let [p2, p3] = eigen(defs_1.EIGENVAL, arg);
     return p2;
 }
+exports.Eval_eigenval = Eval_eigenval;
 /* eigenvec =====================================================================
 
 Tags
@@ -152,18 +147,14 @@ Compute eigenvectors of m. See "eigen" for more info.
 
 */
 function Eval_eigenvec(p1) {
-    const result = _eigenvec(p1);
-    stack_1.push(result);
-}
-exports.Eval_eigenvec = Eval_eigenvec;
-function _eigenvec(p1) {
     const { arg, invalid } = EIG_check_arg(p1);
     if (invalid) {
-        return list_1.makeList(defs_1.symbol(defs_1.EIGENVEC), invalid);
+        return list_1.makeList(symbol_1.symbol(defs_1.EIGENVEC), invalid);
     }
     let [_, p3] = eigen(defs_1.EIGENVEC, arg);
     return p3;
 }
+exports.Eval_eigenvec = Eval_eigenvec;
 function EIG_check_arg(p1) {
     p1 = eval_1.Eval(float_1.yyfloat(eval_1.Eval(defs_1.cadr(p1))));
     if (!defs_1.istensor(p1)) {

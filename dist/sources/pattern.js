@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_patternsinfo = exports.Eval_clearpatterns = exports.do_clearPatterns = exports.Eval_pattern = exports.Eval_silentpattern = void 0;
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const list_1 = require("./list");
@@ -20,8 +19,7 @@ const print_1 = require("./print");
 // printout
 function Eval_silentpattern(p1) {
     Eval_pattern(p1);
-    stack_1.pop();
-    symbol_1.push_symbol(defs_1.NIL);
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_silentpattern = Eval_silentpattern;
 function Eval_pattern(p1) {
@@ -32,12 +30,12 @@ function Eval_pattern(p1) {
     }
     const firstArgument = defs_1.car(defs_1.cdr(p1));
     const secondArgument = defs_1.car(defs_1.cdr(defs_1.cdr(p1)));
-    if (secondArgument === defs_1.symbol(defs_1.NIL)) {
+    if (secondArgument === symbol_1.symbol(defs_1.NIL)) {
         run_1.stop('pattern needs at least a template and a transformed version');
     }
     // third argument is optional and contains the tests
     if (!defs_1.iscons(defs_1.cdr(defs_1.cdr(p1)))) {
-        thirdArgument = defs_1.symbol(defs_1.NIL);
+        thirdArgument = symbol_1.symbol(defs_1.NIL);
     }
     else {
         thirdArgument = defs_1.car(defs_1.cdr(defs_1.cdr(defs_1.cdr(p1))));
@@ -70,7 +68,7 @@ function Eval_pattern(p1) {
     }
     // return the pattern node itself so we can
     // give some printout feedback
-    stack_1.push(list_1.makeList(defs_1.symbol(defs_1.PATTERN), defs_1.cdr(p1)));
+    return list_1.makeList(symbol_1.symbol(defs_1.PATTERN), defs_1.cdr(p1));
 }
 exports.Eval_pattern = Eval_pattern;
 /*
@@ -87,16 +85,16 @@ function Eval_clearpatterns() {
     // untracked reference
     do_clearPatterns();
     // return nothing
-    symbol_1.push_symbol(defs_1.NIL);
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_clearpatterns = Eval_clearpatterns;
 function Eval_patternsinfo() {
     const patternsinfoToBePrinted = patternsinfo();
     if (patternsinfoToBePrinted !== '') {
-        misc_1.new_string(patternsinfoToBePrinted);
+        return new defs_1.Str(patternsinfoToBePrinted);
     }
     else {
-        symbol_1.push_symbol(defs_1.NIL);
+        return symbol_1.symbol(defs_1.NIL);
     }
 }
 exports.Eval_patternsinfo = Eval_patternsinfo;

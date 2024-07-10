@@ -4,7 +4,7 @@ exports.inner = exports.Eval_inner = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const eval_1 = require("./eval");
 const inv_1 = require("./inv");
@@ -95,22 +95,21 @@ function Eval_inner(p1) {
     const args = [];
     args.push(defs_1.car(defs_1.cdr(p1)));
     const secondArgument = defs_1.car(defs_1.cdr(defs_1.cdr(p1)));
-    if (secondArgument === defs_1.symbol(defs_1.NIL)) {
+    if (secondArgument === symbol_1.symbol(defs_1.NIL)) {
         run_1.stop('pattern needs at least a template and a transformed version');
     }
     let moreArgs = defs_1.cdr(defs_1.cdr(p1));
-    while (moreArgs !== defs_1.symbol(defs_1.NIL)) {
+    while (moreArgs !== symbol_1.symbol(defs_1.NIL)) {
         args.push(defs_1.car(moreArgs));
         moreArgs = defs_1.cdr(moreArgs);
     }
     // make it so e.g. inner(a,b,c) becomes inner(a,inner(b,c))
     if (args.length > 2) {
-        let temp = list_1.makeList(defs_1.symbol(defs_1.INNER), args[args.length - 2], args[args.length - 1]);
+        let temp = list_1.makeList(symbol_1.symbol(defs_1.INNER), args[args.length - 2], args[args.length - 1]);
         for (let i = 2; i < args.length; i++) {
-            temp = list_1.makeList(defs_1.symbol(defs_1.INNER), args[args.length - i - 1], temp);
+            temp = list_1.makeList(symbol_1.symbol(defs_1.INNER), args[args.length - i - 1], temp);
         }
-        Eval_inner(temp);
-        return;
+        return Eval_inner(temp);
     }
     // TODO we have to take a look at the whole
     // sequence of operands and make simplifications
@@ -123,7 +122,7 @@ function Eval_inner(p1) {
     let refinedOperands = [];
     // removing all identity matrices
     for (let i = 0; i < operands.length; i++) {
-        if (operands[i] !== defs_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX)) {
+        if (operands[i] !== symbol_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX)) {
             refinedOperands.push(operands[i]);
         }
     }
@@ -138,8 +137,8 @@ function Eval_inner(p1) {
                 //console.log "isNumericAtomOrTensor " + operands[i+shift+1] + " : " + isNumericAtomOrTensor(operands[i+shift+1])
                 if (!(defs_1.isNumericAtomOrTensor(operands[i + shift]) ||
                     defs_1.isNumericAtomOrTensor(operands[i + shift + 1]))) {
-                    const arg2 = eval_1.Eval(operands[i + shift + 1]);
                     const arg1 = inv_1.inv(eval_1.Eval(operands[i + shift]));
+                    const arg2 = eval_1.Eval(operands[i + shift + 1]);
                     const difference = add_1.subtract(arg1, arg2);
                     //console.log "result: " + difference
                     if (is_1.isZeroAtomOrTensor(difference)) {
@@ -173,18 +172,11 @@ function Eval_inner(p1) {
     //console.log "stack[tos-1]: " + stack[tos-1]
     // now rebuild the arguments, just using the
     // refined operands
-    //console.log "rebuilding the argument ----"
-    if (operands.length === 0) {
-        stack_1.push(defs_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX));
-        return;
+    if (operands.length == 0) {
+        return symbol_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX);
     }
-    p1 = list_1.makeList(defs_1.symbol(defs_1.INNER), ...operands);
-    p1 = defs_1.cdr(p1);
-    let result = eval_1.Eval(defs_1.car(p1));
-    if (defs_1.iscons(p1)) {
-        result = p1.tail().reduce((acc, p) => inner(acc, eval_1.Eval(p)), result);
-    }
-    stack_1.push(result);
+    operands = operands.map(eval_1.Eval);
+    return operands.reduce(inner);
 }
 exports.Eval_inner = Eval_inner;
 // inner definition
@@ -207,10 +199,10 @@ function inner(p1, p2) {
     }
     // Check if one of the operands is the identity matrix
     // we could maybe use Eval_testeq here but this seems to suffice?
-    if (p1 === defs_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX)) {
+    if (p1 === symbol_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX)) {
         return p2;
     }
-    else if (p2 === defs_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX)) {
+    else if (p2 === symbol_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX)) {
         return p1;
     }
     if (defs_1.istensor(p1) && defs_1.istensor(p2)) {
@@ -222,7 +214,7 @@ function inner(p1, p2) {
         if (!(defs_1.isNumericAtomOrTensor(p1) || defs_1.isNumericAtomOrTensor(p2))) {
             const subtractionResult = add_1.subtract(p1, inv_1.inv(p2));
             if (is_1.isZeroAtomOrTensor(subtractionResult)) {
-                return defs_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX);
+                return symbol_1.symbol(defs_1.SYMBOL_IDENTITY_MATRIX);
             }
         }
         // if either operand is a sum then distribute (if we are in expanding mode)
@@ -262,7 +254,7 @@ function inner(p1, p2) {
             //   unknown - tensor
             //   tensor  - unknown
             // in this case we can't use normal multiplication.
-            return list_1.makeList(defs_1.symbol(defs_1.INNER), p1, p2);
+            return list_1.makeList(symbol_1.symbol(defs_1.INNER), p1, p2);
         }
     }
 }
@@ -359,7 +351,7 @@ function get_innerprod_factors(tree, factors_accumulator) {
         add_factor_to_accumulator(tree, factors_accumulator);
         return;
     }
-    if (defs_1.cdr(tree) === defs_1.symbol(defs_1.NIL)) {
+    if (defs_1.cdr(tree) === symbol_1.symbol(defs_1.NIL)) {
         get_innerprod_factors(defs_1.car(tree), factors_accumulator);
         return;
     }
@@ -372,7 +364,7 @@ function get_innerprod_factors(tree, factors_accumulator) {
     add_factor_to_accumulator(tree, factors_accumulator);
 }
 function add_factor_to_accumulator(tree, factors_accumulator) {
-    if (tree !== defs_1.symbol(defs_1.NIL)) {
+    if (tree !== symbol_1.symbol(defs_1.NIL)) {
         // console.log ">> adding to factors_accumulator: " + tree
         factors_accumulator.push(tree);
     }

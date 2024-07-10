@@ -4,7 +4,7 @@ exports.Eval_contract = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -29,7 +29,7 @@ contract(m) is equivalent to the trace of matrix m.
 function Eval_contract(p1) {
     const p1_prime = eval_1.Eval(defs_1.cadr(p1));
     let p2, p3;
-    if (defs_1.cddr(p1) === defs_1.symbol(defs_1.NIL)) {
+    if (defs_1.cddr(p1) === symbol_1.symbol(defs_1.NIL)) {
         p2 = defs_1.Constants.one;
         p3 = bignum_1.integer(2);
     }
@@ -37,8 +37,7 @@ function Eval_contract(p1) {
         p2 = eval_1.Eval(defs_1.caddr(p1));
         p3 = eval_1.Eval(defs_1.cadddr(p1));
     }
-    const result = contract(p1_prime, p2, p3);
-    stack_1.push(result);
+    return contract(p1_prime, p2, p3);
 }
 exports.Eval_contract = Eval_contract;
 function contract(p1, p2, p3) {

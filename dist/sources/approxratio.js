@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.testApprox = exports.approxAll = exports.approxRationalsOfLogs = exports.approxRadicals = exports.Eval_approxratio = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const bignum_1 = require("./bignum");
 const float_1 = require("./float");
 const list_1 = require("./list");
@@ -12,7 +12,7 @@ const tensor_1 = require("./tensor");
  Guesses a rational for each float in the passed expression
 */
 function Eval_approxratio(p1) {
-    stack_1.push(approxratioRecursive(defs_1.cadr(p1)));
+    return approxratioRecursive(defs_1.cadr(p1));
 }
 exports.Eval_approxratio = Eval_approxratio;
 function approxratioRecursive(expr) {
@@ -49,7 +49,7 @@ function approxOneRatioOnly(p1) {
         return bignum_1.integer(theFloat);
     }
     // we didn't manage, just leave unexpressed
-    return list_1.makeList(defs_1.symbol(defs_1.APPROXRATIO), supposedlyTheFloat);
+    return list_1.makeList(symbol_1.symbol(defs_1.APPROXRATIO), supposedlyTheFloat);
 }
 // original routine by John Kennedy, see
 // https://web.archive.org/web/20111027100847/http://homepage.smc.edu/kennedy_john/DEC2FRAC.PDF

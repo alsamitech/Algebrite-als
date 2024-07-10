@@ -8,6 +8,7 @@ const factor_1 = require("./factor");
 const is_1 = require("./is");
 const list_1 = require("./list");
 const multiply_1 = require("./multiply");
+const symbol_1 = require("../runtime/symbol");
 //-----------------------------------------------------------------------------
 //
 //  Factor small numerical powers
@@ -37,11 +38,11 @@ function quickpower(BASE, EXPO) {
     let fractionalPart;
     // fractional part of EXPO
     if (!is_1.isZeroAtomOrTensor(p4)) {
-        fractionalPart = list_1.makeList(defs_1.symbol(defs_1.POWER), BASE, p4);
+        fractionalPart = list_1.makeList(symbol_1.symbol(defs_1.POWER), BASE, p4);
     }
     const expo = bignum_1.nativeInt(p3);
     if (isNaN(expo)) {
-        const result = list_1.makeList(defs_1.symbol(defs_1.POWER), BASE, p3);
+        const result = list_1.makeList(symbol_1.symbol(defs_1.POWER), BASE, p3);
         return fractionalPart ? [fractionalPart, result] : [result];
     }
     if (expo === 0) {

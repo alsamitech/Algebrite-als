@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.print_list = exports.print_expr = exports.printline = exports.collectLatexStringFromReturnValue = exports.print_str = exports.Eval_printlist = exports.Eval_printhuman = exports.Eval_printlatex = exports.Eval_printcomputer = exports.Eval_print2dascii = exports.Eval_print = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const misc_1 = require("../sources/misc");
 const abs_1 = require("./abs");
@@ -19,28 +18,28 @@ const power_str = '^';
 // "print" explicitly
 function Eval_print(p1) {
     defs_1.defs.stringsEmittedByUserPrintouts += _print(defs_1.cdr(p1), defs_1.defs.printMode);
-    stack_1.push(defs_1.symbol(defs_1.NIL));
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_print = Eval_print;
 // this is only invoked when user invokes
 // "print2dascii" explicitly
 function Eval_print2dascii(p1) {
     defs_1.defs.stringsEmittedByUserPrintouts += _print(defs_1.cdr(p1), defs_1.PRINTMODE_2DASCII);
-    stack_1.push(defs_1.symbol(defs_1.NIL));
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_print2dascii = Eval_print2dascii;
 // this is only invoked when user invokes
 // "printcomputer" explicitly
 function Eval_printcomputer(p1) {
     defs_1.defs.stringsEmittedByUserPrintouts += _print(defs_1.cdr(p1), defs_1.PRINTMODE_COMPUTER);
-    stack_1.push(defs_1.symbol(defs_1.NIL));
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_printcomputer = Eval_printcomputer;
 // this is only invoked when user invokes
 // "printlatex" explicitly
 function Eval_printlatex(p1) {
     defs_1.defs.stringsEmittedByUserPrintouts += _print(defs_1.cdr(p1), defs_1.PRINTMODE_LATEX);
-    stack_1.push(defs_1.symbol(defs_1.NIL));
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_printlatex = Eval_printlatex;
 // this is only invoked when user invokes
@@ -53,7 +52,7 @@ function Eval_printhuman(p1) {
     defs_1.defs.test_flag = false;
     defs_1.defs.stringsEmittedByUserPrintouts += _print(defs_1.cdr(p1), defs_1.PRINTMODE_HUMAN);
     defs_1.defs.test_flag = original_test_flag;
-    stack_1.push(defs_1.symbol(defs_1.NIL));
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_printhuman = Eval_printhuman;
 // this is only invoked when user invokes
@@ -61,7 +60,7 @@ exports.Eval_printhuman = Eval_printhuman;
 function Eval_printlist(p1) {
     const beenPrinted = _print(defs_1.cdr(p1), defs_1.PRINTMODE_LIST);
     defs_1.defs.stringsEmittedByUserPrintouts += beenPrinted;
-    stack_1.push(defs_1.symbol(defs_1.NIL));
+    return symbol_1.symbol(defs_1.NIL);
 }
 exports.Eval_printlist = Eval_printlist;
 function _print(p, passedPrintMode) {
@@ -109,9 +108,8 @@ function _print(p, passedPrintMode) {
     return accumulator;
 }
 function rememberPrint(theString, theTypeOfPrint) {
-    scan_1.scan('"' + theString + '"');
-    const parsedString = stack_1.pop();
-    symbol_1.set_binding(defs_1.symbol(theTypeOfPrint), parsedString);
+    const [, parsedString] = scan_1.scan('"' + theString + '"');
+    symbol_1.set_binding(symbol_1.symbol(theTypeOfPrint), parsedString);
 }
 function print_str(s) {
     if (defs_1.DEBUG) {
@@ -418,7 +416,7 @@ function print_term(p) {
                     // Note that sqrt() i.e when exponent is 1/2
                     // doesn't count because the radical gives
                     // a nice graphical separation already.
-                    if (defs_1.caar(p) === defs_1.symbol(defs_1.POWER)) {
+                    if (defs_1.caar(p) === symbol_1.symbol(defs_1.POWER)) {
                         if (defs_1.isNumericAtom(defs_1.car(defs_1.cdr(defs_1.car(p))))) {
                             // rule out square root
                             if (!is_1.isfraction(defs_1.car(defs_1.cdr(defs_1.cdr(defs_1.car(p)))))) {
@@ -774,7 +772,7 @@ function print_TEST_latex(p) {
         // odd number of parameters means that the
         // last argument becomes the default case
         // i.e. the one without a test.
-        if (defs_1.cdr(p) === defs_1.symbol(defs_1.NIL)) {
+        if (defs_1.cdr(p) === symbol_1.symbol(defs_1.NIL)) {
             accumulator += '{';
             accumulator += print_expr(defs_1.car(p));
             accumulator += '} & otherwise ';
@@ -801,7 +799,7 @@ function print_TEST_codegen(p) {
         // odd number of parameters means that the
         // last argument becomes the default case
         // i.e. the one without a test.
-        if (defs_1.cdr(p) === defs_1.symbol(defs_1.NIL)) {
+        if (defs_1.cdr(p) === symbol_1.symbol(defs_1.NIL)) {
             accumulator += 'else {';
             accumulator += 'return (' + print_expr(defs_1.car(p)) + ');';
             accumulator += '}';
@@ -983,8 +981,8 @@ function print_power(base, exponent) {
             }
         }
     }
-    if (is_1.equaln(symbol_1.get_binding(defs_1.symbol(defs_1.PRINT_LEAVE_E_ALONE)), 1) &&
-        base === defs_1.symbol(defs_1.E)) {
+    if (is_1.equaln(symbol_1.get_binding(symbol_1.symbol(defs_1.PRINT_LEAVE_E_ALONE)), 1) &&
+        base === symbol_1.symbol(defs_1.E)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_str('Math.exp(');
             accumulator += print_expo_of_denom(exponent);
@@ -1011,7 +1009,7 @@ function print_power(base, exponent) {
         accumulator += print_str(')');
         return accumulator;
     }
-    if (is_1.equaln(symbol_1.get_binding(defs_1.symbol(defs_1.PRINT_LEAVE_X_ALONE)), 0) ||
+    if (is_1.equaln(symbol_1.get_binding(symbol_1.symbol(defs_1.PRINT_LEAVE_X_ALONE)), 0) ||
         base.printname !== 'x') {
         // if the exponent is negative then
         // we invert the base BUT we don't do
@@ -1020,7 +1018,7 @@ function print_power(base, exponent) {
         // expressed in terms of exponential functions
         // that would be really confusing, one wants to
         // keep "e" as the base and the negative exponent
-        if (base !== defs_1.symbol(defs_1.E)) {
+        if (base !== symbol_1.symbol(defs_1.E)) {
             if (is_1.isminusone(exponent)) {
                 if (defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
                     accumulator += print_str('\\frac{1}{');
@@ -1103,12 +1101,23 @@ function print_power(base, exponent) {
             accumulator += print_expr(base);
             accumulator += print_str(')');
         }
-        else if (defs_1.ismultiply(base) || defs_1.ispower(base)) {
-            if (defs_1.defs.printMode !== defs_1.PRINTMODE_LATEX) {
+        else if (defs_1.ismultiply(base)) {
+            accumulator += print_str('(');
+            accumulator += print_factor(base, true);
+            accumulator += print_str(')');
+        }
+        else if (defs_1.ispower(base)) {
+            if (defs_1.defs.printMode == defs_1.PRINTMODE_LATEX) {
+                accumulator += print_str('{');
+            }
+            else {
                 accumulator += print_str('(');
             }
             accumulator += print_factor(base, true);
-            if (defs_1.defs.printMode !== defs_1.PRINTMODE_LATEX) {
+            if (defs_1.defs.printMode == defs_1.PRINTMODE_LATEX) {
+                accumulator += print_str('}');
+            }
+            else {
                 accumulator += print_str(')');
             }
         }
@@ -1160,10 +1169,10 @@ function print_power(base, exponent) {
 function print_index_function(p) {
     let accumulator = '';
     p = defs_1.cdr(p);
-    if (defs_1.caar(p) === defs_1.symbol(defs_1.ADD) ||
-        defs_1.caar(p) === defs_1.symbol(defs_1.MULTIPLY) ||
-        defs_1.caar(p) === defs_1.symbol(defs_1.POWER) ||
-        defs_1.caar(p) === defs_1.symbol(defs_1.FACTORIAL)) {
+    if (defs_1.caar(p) === symbol_1.symbol(defs_1.ADD) ||
+        defs_1.caar(p) === symbol_1.symbol(defs_1.MULTIPLY) ||
+        defs_1.caar(p) === symbol_1.symbol(defs_1.POWER) ||
+        defs_1.caar(p) === symbol_1.symbol(defs_1.FACTORIAL)) {
         accumulator += print_subexpr(defs_1.car(p));
     }
     else {
@@ -1276,7 +1285,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
     //    print_str("}")
     //    return
     //  }
-    if (defs_1.car(p) === defs_1.symbol(defs_1.FUNCTION)) {
+    if (defs_1.car(p) === symbol_1.symbol(defs_1.FUNCTION)) {
         const fbody = defs_1.cadr(p);
         if (!defs_1.defs.codeGen) {
             const parameters = defs_1.caddr(p);
@@ -1291,7 +1300,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
         accumulator += print_expr(fbody);
         return accumulator;
     }
-    if (defs_1.car(p) === defs_1.symbol(defs_1.PATTERN)) {
+    if (defs_1.car(p) === symbol_1.symbol(defs_1.PATTERN)) {
         accumulator += print_expr(defs_1.caadr(p));
         if (defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
             accumulator += print_str(' \\rightarrow ');
@@ -1307,7 +1316,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
         accumulator += print_expr(defs_1.car(defs_1.cdr(defs_1.cadr(p))));
         return accumulator;
     }
-    if (defs_1.car(p) === defs_1.symbol(defs_1.INDEX) && defs_1.issymbol(defs_1.cadr(p))) {
+    if (defs_1.car(p) === symbol_1.symbol(defs_1.INDEX) && defs_1.issymbol(defs_1.cadr(p))) {
         accumulator += print_index_function(p);
         return accumulator;
     }
@@ -1315,11 +1324,11 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
         accumulator += print_factorial_function(p);
         return accumulator;
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.ABS) && defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.ABS) && defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
         accumulator += print_ABS_latex(p);
         return accumulator;
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.SQRT) && defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.SQRT) && defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
         //breakpoint
         accumulator += print_SQRT_latex(p);
         return accumulator;
@@ -1334,7 +1343,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.UNIT)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.UNIT)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_UNIT_codegen(p);
             return accumulator;
@@ -1350,12 +1359,12 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.BINOMIAL) &&
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.BINOMIAL) &&
         defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
         accumulator += print_BINOMIAL_latex(p);
         return accumulator;
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.DEFINT) && defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.DEFINT) && defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
         accumulator += print_DEFINT_latex(p);
         return accumulator;
     }
@@ -1369,43 +1378,43 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.SIN)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.SIN)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_SIN_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.COS)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.COS)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_COS_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.TAN)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.TAN)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_TAN_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.ARCSIN)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.ARCSIN)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_ARCSIN_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.ARCCOS)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.ARCCOS)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_ARCCOS_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.ARCTAN)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.ARCTAN)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_ARCTAN_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.SUM)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.SUM)) {
         if (defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
             accumulator += print_SUM_latex(p);
             return accumulator;
@@ -1419,7 +1428,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
         //    print_expr(cadr(p))
         //    return accumulator
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.PRODUCT)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.PRODUCT)) {
         if (defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
             accumulator += print_PRODUCT_latex(p);
             return accumulator;
@@ -1429,19 +1438,19 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.FOR)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.FOR)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_FOR_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.DO)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.DO)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_DO_codegen(p);
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.TEST)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.TEST)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_TEST_codegen(p);
             return accumulator;
@@ -1451,7 +1460,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.TESTLT)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.TESTLT)) {
         if (defs_1.defs.codeGen) {
             accumulator +=
                 '((' + print_expr(defs_1.cadr(p)) + ') < (' + print_expr(defs_1.caddr(p)) + '))';
@@ -1462,7 +1471,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.TESTLE)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.TESTLE)) {
         if (defs_1.defs.codeGen) {
             accumulator +=
                 '((' + print_expr(defs_1.cadr(p)) + ') <= (' + print_expr(defs_1.caddr(p)) + '))';
@@ -1473,7 +1482,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.TESTGT)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.TESTGT)) {
         if (defs_1.defs.codeGen) {
             accumulator +=
                 '((' + print_expr(defs_1.cadr(p)) + ') > (' + print_expr(defs_1.caddr(p)) + '))';
@@ -1484,7 +1493,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.TESTGE)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.TESTGE)) {
         if (defs_1.defs.codeGen) {
             accumulator +=
                 '((' + print_expr(defs_1.cadr(p)) + ') >= (' + print_expr(defs_1.caddr(p)) + '))';
@@ -1495,7 +1504,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.TESTEQ)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.TESTEQ)) {
         if (defs_1.defs.codeGen) {
             accumulator +=
                 '((' + print_expr(defs_1.cadr(p)) + ') === (' + print_expr(defs_1.caddr(p)) + '))';
@@ -1506,7 +1515,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.FLOOR)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.FLOOR)) {
         if (defs_1.defs.codeGen) {
             accumulator += 'Math.floor(' + print_expr(defs_1.cadr(p)) + ')';
             return accumulator;
@@ -1516,7 +1525,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.CEILING)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.CEILING)) {
         if (defs_1.defs.codeGen) {
             accumulator += 'Math.ceiling(' + print_expr(defs_1.cadr(p)) + ')';
             return accumulator;
@@ -1526,13 +1535,13 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.ROUND)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.ROUND)) {
         if (defs_1.defs.codeGen) {
             accumulator += 'Math.round(' + print_expr(defs_1.cadr(p)) + ')';
             return accumulator;
         }
     }
-    else if (defs_1.car(p) === defs_1.symbol(defs_1.SETQ)) {
+    else if (defs_1.car(p) === symbol_1.symbol(defs_1.SETQ)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_SETQ_codegen(p);
             return accumulator;
@@ -1568,10 +1577,10 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
         }
         return accumulator;
     }
-    if (p === defs_1.symbol(defs_1.DERIVATIVE)) {
+    if (p === symbol_1.symbol(defs_1.DERIVATIVE)) {
         accumulator += print_char('d');
     }
-    else if (p === defs_1.symbol(defs_1.E)) {
+    else if (p === symbol_1.symbol(defs_1.E)) {
         if (defs_1.defs.codeGen) {
             accumulator += print_str('Math.E');
         }
@@ -1579,7 +1588,7 @@ function print_factor(p, omitParens = false, pastFirstFactor = false) {
             accumulator += print_str('e');
         }
     }
-    else if (p === defs_1.symbol(defs_1.PI)) {
+    else if (p === symbol_1.symbol(defs_1.PI)) {
         if (defs_1.defs.printMode === defs_1.PRINTMODE_LATEX) {
             accumulator += print_str('\\pi');
         }
@@ -1607,12 +1616,12 @@ function print_list(p) {
                 accumulator += ' ';
                 accumulator += print_list(defs_1.car(p));
                 p = defs_1.cdr(p);
-                if (p === defs_1.cdr(p) && p !== defs_1.symbol(defs_1.NIL)) {
+                if (p === defs_1.cdr(p) && p !== symbol_1.symbol(defs_1.NIL)) {
                     console.log('oh no recursive!');
                     defs_1.breakpoint;
                 }
             }
-            if (p !== defs_1.symbol(defs_1.NIL)) {
+            if (p !== symbol_1.symbol(defs_1.NIL)) {
                 accumulator += ' . ';
                 accumulator += print_list(p);
             }
@@ -1650,7 +1659,7 @@ function print_multiply_sign() {
     return accumulator;
 }
 function is_denominator(p) {
-    return defs_1.ispower(p) && defs_1.cadr(p) !== defs_1.symbol(defs_1.E) && is_1.isnegativeterm(defs_1.caddr(p));
+    return defs_1.ispower(p) && defs_1.cadr(p) !== symbol_1.symbol(defs_1.E) && is_1.isnegativeterm(defs_1.caddr(p));
 }
 // don't consider the leading fraction
 // we want 2/3*a*b*c instead of 2*a*b*c/3

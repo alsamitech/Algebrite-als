@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.hermite = void 0;
 const defs_1 = require("../runtime/defs");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -26,12 +27,12 @@ exports.hermite = hermite;
 function yyhermite(X, N) {
     const n = bignum_1.nativeInt(N);
     if (n < 0 || isNaN(n)) {
-        return list_1.makeList(defs_1.symbol(defs_1.HERMITE), X, N);
+        return list_1.makeList(symbol_1.symbol(defs_1.HERMITE), X, N);
     }
     if (defs_1.issymbol(X)) {
         return yyhermite2(n, X);
     }
-    return eval_1.Eval(subst_1.subst(yyhermite2(n, defs_1.symbol(defs_1.SECRETX)), defs_1.symbol(defs_1.SECRETX), X));
+    return eval_1.Eval(subst_1.subst(yyhermite2(n, symbol_1.symbol(defs_1.SECRETX)), symbol_1.symbol(defs_1.SECRETX), X));
 }
 function yyhermite2(n, p1) {
     let Y1 = defs_1.Constants.zero;

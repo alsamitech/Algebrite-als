@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sgn = exports.Eval_sgn = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const abs_1 = require("./abs");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
@@ -19,8 +19,7 @@ const power_1 = require("./power");
 //
 //-----------------------------------------------------------------------------
 function Eval_sgn(p1) {
-    const result = sgn(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return sgn(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_sgn = Eval_sgn;
 function sgn(X) {
@@ -46,8 +45,8 @@ function sgn(X) {
         return multiply_1.multiply(power_1.power(defs_1.Constants.negOne, abs_1.absval(X)), X);
     }
     if (is_1.isnegativeterm(X)) {
-        return multiply_1.multiply(list_1.makeList(defs_1.symbol(defs_1.SGN), multiply_1.negate(X)), defs_1.Constants.negOne);
+        return multiply_1.multiply(list_1.makeList(symbol_1.symbol(defs_1.SGN), multiply_1.negate(X)), defs_1.Constants.negOne);
     }
-    return list_1.makeList(defs_1.symbol(defs_1.SGN), X);
+    return list_1.makeList(symbol_1.symbol(defs_1.SGN), X);
 }
 exports.sgn = sgn;

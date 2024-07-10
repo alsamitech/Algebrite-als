@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_gamma = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const eval_1 = require("./eval");
@@ -19,8 +19,7 @@ const sin_1 = require("./sin");
 //
 //-----------------------------------------------------------------------------
 function Eval_gamma(p1) {
-    const result = gamma(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return gamma(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_gamma = Eval_gamma;
 function gamma(p1) {
@@ -44,7 +43,7 @@ function gammaf(p1) {
     if (defs_1.isadd(p1)) {
         return gamma_of_sum(p1);
     }
-    return list_1.makeList(defs_1.symbol(defs_1.GAMMA), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.GAMMA), p1);
 }
 function gamma_of_sum(p1) {
     const p3 = defs_1.cdr(p1);
@@ -58,5 +57,5 @@ function gamma_of_sum(p1) {
         defs_1.MEQUAL(defs_1.car(p3).q.b, 1)) {
         return multiply_1.divide(gamma(defs_1.cadr(p3)), add_1.add(defs_1.cadr(p3), defs_1.Constants.negOne));
     }
-    return list_1.makeList(defs_1.symbol(defs_1.GAMMA), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.GAMMA), p1);
 }

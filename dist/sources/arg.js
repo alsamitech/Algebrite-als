@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.arg = exports.Eval_arg = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const arctan_1 = require("./arctan");
@@ -80,7 +79,7 @@ Notes
 */
 const DEBUG_ARG = false;
 function Eval_arg(z) {
-    stack_1.push(arg(eval_1.Eval(defs_1.cadr(z))));
+    return arg(eval_1.Eval(defs_1.cadr(z)));
 }
 exports.Eval_arg = Eval_arg;
 function arg(z) {
@@ -89,7 +88,7 @@ function arg(z) {
 exports.arg = arg;
 function yyarg(p1) {
     // case of plain number
-    if (is_1.ispositivenumber(p1) || p1 === defs_1.symbol(defs_1.PI)) {
+    if (is_1.ispositivenumber(p1) || p1 === symbol_1.symbol(defs_1.PI)) {
         return defs_1.isdouble(p1) || defs_1.defs.evaluatingAsFloats
             ? defs_1.Constants.zeroAsDouble
             : defs_1.Constants.zero;
@@ -97,7 +96,7 @@ function yyarg(p1) {
     if (is_1.isnegativenumber(p1)) {
         const pi = defs_1.isdouble(p1) || defs_1.defs.evaluatingAsFloats
             ? defs_1.Constants.piAsDouble
-            : defs_1.symbol(defs_1.PI);
+            : symbol_1.symbol(defs_1.PI);
         return multiply_1.negate(pi);
     }
     // you'd think that something like
@@ -105,13 +104,13 @@ function yyarg(p1) {
     // arg(a) is pi when a is negative so we have
     // to leave unexpressed
     if (defs_1.issymbol(p1)) {
-        return list_1.makeList(defs_1.symbol(defs_1.ARG), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.ARG), p1);
     }
     if (defs_1.ispower(p1) && is_1.equaln(defs_1.cadr(p1), -1)) {
         // -1 to a power
         return multiply_1.multiply(defs_1.Constants.Pi(), defs_1.caddr(p1));
     }
-    if (defs_1.ispower(p1) && defs_1.cadr(p1) === defs_1.symbol(defs_1.E)) {
+    if (defs_1.ispower(p1) && defs_1.cadr(p1) === symbol_1.symbol(defs_1.E)) {
         // exponential
         // arg(a^(1/2)) is always equal to 1/2 * arg(a)
         // this can obviously be made more generic TODO
@@ -156,11 +155,11 @@ function yyarg(p1) {
             return arg1;
         }
     }
-    if (!is_1.isZeroAtomOrTensor(symbol_1.get_binding(defs_1.symbol(defs_1.ASSUME_REAL_VARIABLES)))) {
+    if (!is_1.isZeroAtomOrTensor(symbol_1.get_binding(symbol_1.symbol(defs_1.ASSUME_REAL_VARIABLES)))) {
         // if we assume all passed values are real
         return defs_1.Constants.zero;
     }
     // if we don't assume all passed values are real, all
     // we con do is to leave unexpressed
-    return list_1.makeList(defs_1.symbol(defs_1.ARG), p1);
+    return list_1.makeList(symbol_1.symbol(defs_1.ARG), p1);
 }

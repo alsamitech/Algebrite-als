@@ -4,7 +4,6 @@ exports.Eval_outer = void 0;
 const alloc_1 = require("../runtime/alloc");
 const defs_1 = require("../runtime/defs");
 const run_1 = require("../runtime/run");
-const stack_1 = require("../runtime/stack");
 const eval_1 = require("./eval");
 const multiply_1 = require("./multiply");
 const tensor_1 = require("./tensor");
@@ -15,7 +14,7 @@ function Eval_outer(p1) {
     const result = defs_1.iscons(p1)
         ? p1.tail().reduce((acc, p) => outer(acc, eval_1.Eval(p)), temp)
         : temp;
-    stack_1.push(result);
+    return result;
 }
 exports.Eval_outer = Eval_outer;
 function outer(p1, p2) {

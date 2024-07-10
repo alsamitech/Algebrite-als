@@ -2,13 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Eval_isprime = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const eval_1 = require("./eval");
 const is_1 = require("./is");
 const mprime_1 = require("./mprime");
 function Eval_isprime(p1) {
-    const result = isprime(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return isprime(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_isprime = Eval_isprime;
 function isprime(p1) {

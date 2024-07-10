@@ -2,17 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.factorial = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
 const misc_1 = require("../sources/misc");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const list_1 = require("./list");
 const multiply_1 = require("./multiply");
 const power_1 = require("./power");
+const symbol_1 = require("../runtime/symbol");
 function factorial(p1) {
     const n = bignum_1.nativeInt(p1);
     if (n < 0 || isNaN(n)) {
-        return list_1.makeList(defs_1.symbol(defs_1.FACTORIAL), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.FACTORIAL), p1);
     }
     return bignum_1.bignum_factorial(n);
 }
@@ -48,41 +48,34 @@ function simplifyfactorials_(p1) {
     return p1;
 }
 function sfac_product(p1) {
-    const s = defs_1.defs.tos;
-    let n = 0;
+    let terms = [];
     if (defs_1.iscons(p1)) {
-        p1.tail().forEach((p) => {
-            stack_1.push(p);
-            n++;
-        });
+        terms = p1.tail();
     }
-    for (let i = 0; i < n - 1; i++) {
-        if (defs_1.defs.stack[s + i] === defs_1.symbol(defs_1.NIL)) {
+    for (let i = 0; i < terms.length; i++) {
+        if (terms[i] === symbol_1.symbol(defs_1.NIL)) {
             continue;
         }
-        for (let j = i + 1; j < n; j++) {
-            if (defs_1.defs.stack[s + j] === defs_1.symbol(defs_1.NIL)) {
+        for (let j = i + 1; j < terms.length; j++) {
+            if (terms[j] === symbol_1.symbol(defs_1.NIL)) {
                 continue;
             }
-            sfac_product_f(s, i, j);
+            sfac_product_f(terms, i, j);
         }
     }
-    stack_1.push(defs_1.Constants.one);
-    for (let i = 0; i < n; i++) {
-        if (defs_1.defs.stack[s + i] === defs_1.symbol(defs_1.NIL)) {
+    let result = defs_1.Constants.one;
+    for (let i = 0; i < terms.length; i++) {
+        if (terms[i] === symbol_1.symbol(defs_1.NIL)) {
             continue;
         }
-        const arg1 = stack_1.pop();
-        stack_1.push(multiply_1.multiply(arg1, defs_1.defs.stack[s + i]));
+        result = multiply_1.multiply(result, terms[i]);
     }
-    p1 = stack_1.pop();
-    stack_1.moveTos(defs_1.defs.tos - n);
-    return p1;
+    return result;
 }
 function sfac_product_f(s, a, b) {
     let p3, p4;
-    let p1 = defs_1.defs.stack[s + a];
-    let p2 = defs_1.defs.stack[s + b];
+    let p1 = s[a];
+    let p2 = s[b];
     if (defs_1.ispower(p1)) {
         p3 = defs_1.caddr(p1);
         p1 = defs_1.cadr(p1);
@@ -121,7 +114,7 @@ function sfac_product_f(s, a, b) {
         for (let i = 1; i <= n; i++) {
             temp3 = multiply_1.multiply(temp3, power_1.power(add_1.add(defs_1.cadr(p2), bignum_1.integer(i)), p3));
         }
-        defs_1.defs.stack[s + a] = temp3;
-        defs_1.defs.stack[s + b] = defs_1.symbol(defs_1.NIL);
+        s[a] = temp3;
+        s[b] = symbol_1.symbol(defs_1.NIL);
     }
 }

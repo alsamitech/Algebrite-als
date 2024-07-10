@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sine = exports.Eval_sin = void 0;
 const defs_1 = require("../runtime/defs");
-const stack_1 = require("../runtime/stack");
+const symbol_1 = require("../runtime/symbol");
 const add_1 = require("./add");
 const bignum_1 = require("./bignum");
 const cos_1 = require("./cos");
@@ -13,8 +13,7 @@ const multiply_1 = require("./multiply");
 const power_1 = require("./power");
 // Sine function of numerical and symbolic arguments
 function Eval_sin(p1) {
-    const result = sine(eval_1.Eval(defs_1.cadr(p1)));
-    stack_1.push(result);
+    return sine(eval_1.Eval(defs_1.cadr(p1)));
 }
 exports.Eval_sin = Eval_sin;
 function sine(p1) {
@@ -43,7 +42,7 @@ function sine_of_angle_sum(p1) {
     return sine_of_angle(p1);
 }
 function sine_of_angle(p1) {
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.ARCSIN)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.ARCSIN)) {
         return defs_1.cadr(p1);
     }
     if (defs_1.isdouble(p1)) {
@@ -59,7 +58,7 @@ function sine_of_angle(p1) {
     }
     // sin(arctan(x)) = x / sqrt(1 + x^2)
     // see p. 173 of the CRC Handbook of Mathematical Sciences
-    if (defs_1.car(p1) === defs_1.symbol(defs_1.ARCTAN)) {
+    if (defs_1.car(p1) === symbol_1.symbol(defs_1.ARCTAN)) {
         return multiply_1.multiply(defs_1.cadr(p1), power_1.power(add_1.add(defs_1.Constants.one, power_1.power(defs_1.cadr(p1), bignum_1.integer(2))), bignum_1.rational(-1, 2)));
     }
     // multiply by 180/pi to go from radians to degrees.
@@ -76,7 +75,7 @@ function sine_of_angle(p1) {
     // happen for a round number of degrees. There are some exceptions
     // though, e.g. 22.5 degrees, which we don't capture here.
     if (n < 0 || isNaN(n)) {
-        return list_1.makeList(defs_1.symbol(defs_1.SIN), p1);
+        return list_1.makeList(symbol_1.symbol(defs_1.SIN), p1);
     }
     // values of some famous angles. Many more here:
     // https://en.wikipedia.org/wiki/Trigonometric_constants_expressed_in_real_radicals
@@ -107,6 +106,6 @@ function sine_of_angle(p1) {
         case 270:
             return defs_1.Constants.negOne;
         default:
-            return list_1.makeList(defs_1.symbol(defs_1.SIN), p1);
+            return list_1.makeList(symbol_1.symbol(defs_1.SIN), p1);
     }
 }
