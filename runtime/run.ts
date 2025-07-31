@@ -42,6 +42,7 @@ import {
   get_binding,
   set_binding, symbol,
   usr_symbol,
+  withEnvironment,
 } from './symbol';
 
 //jmp_buf stop_return, draw_stop_return
@@ -681,7 +682,8 @@ var TIMING_DEBUGS = false;
 
 export function run(
   stringToBeRun: string,
-  generateLatex = false
+  generateLatex = false,
+  environment?: string
 ): string | string[] {
   let p1: U, p2: U;
 
@@ -706,11 +708,19 @@ export function run(
     init();
   }
 
-  let n = 0;
-  let indexOfPartRemainingToBeParsed = 0;
+  // If an environment is specified, execute in that environment context
+  if (environment) {
+    return withEnvironment(environment, () => executeInCurrentEnvironment());
+  } else {
+    return executeInCurrentEnvironment();
+  }
 
-  let allReturnedPlainStrings = '';
-  let allReturnedLatexStrings = '';
+  function executeInCurrentEnvironment(): string | string[] {
+    let n = 0;
+    let indexOfPartRemainingToBeParsed = 0;
+
+    let allReturnedPlainStrings = '';
+    let allReturnedLatexStrings = '';
 
   let collectedLatexResult: string;
   let collectedPlainResult: string;
@@ -883,6 +893,7 @@ export function run(
   allReturnedPlainStrings = '';
   allReturnedLatexStrings = '';
   return stringToBeReturned;
+  } // end of executeInCurrentEnvironment function
 }
 
 export function check_stack() {

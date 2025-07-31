@@ -62,6 +62,14 @@ import {
   Eval_subst,
   Eval_unit
 } from '../sources/eval';
+import { 
+  Eval_createEnvironment,
+  Eval_switchEnvironment, 
+  Eval_getCurrentEnvironment,
+  Eval_listEnvironments,
+  Eval_saveEnvironment,
+  Eval_restoreEnvironment
+} from '../sources/environment';
 import { Eval_expand } from '../sources/expand';
 import { Eval_expcos } from '../sources/expcos';
 import { Eval_expsin } from '../sources/expsin';
@@ -154,6 +162,7 @@ import {
   CONJ,
   Constants,
   CONTRACT,
+  CREATEENVIRONMENT,
   COS,
   COSH,
   DEBUG,
@@ -193,6 +202,7 @@ import {
   FUNCTION,
   GAMMA,
   GCD,
+  GETCURRENTENVIRONMENT,
   HERMITE,
   HILBERT,
   IMAG,
@@ -214,6 +224,7 @@ import {
   LCM,
   LEADING,
   LEGENDRE,
+  LISTENVIRONMENTS,
   LOG,
   LOOKUP,
   MAX_FIXED_PRINTOUT_DIGITS,
@@ -251,8 +262,10 @@ import {
   RATIONALIZE,
   REAL,
   reset_after_error,
+  RESTOREENVIRONMENT,
   ROOTS,
   ROUND,
+  SAVEENVIRONMENT,
   SECRETX,
   SETQ,
   SGN,
@@ -265,6 +278,7 @@ import {
   STOP,
   SUBST,
   SUM,
+  SWITCHENVIRONMENT,
   SYMBOLSINFO,
   SYMBOL_A,
   SYMBOL_A_UNDERSCORE,
@@ -414,6 +428,7 @@ export function defn() {
   std_symbol(CONDENSE, Eval_condense);
   std_symbol(CONJ, Eval_conj);
   std_symbol(CONTRACT, Eval_contract);
+  std_symbol(CREATEENVIRONMENT, Eval_createEnvironment);
   std_symbol(COS, Eval_cos);
   std_symbol(COSH, Eval_cosh);
   std_symbol(DECOMP, Eval_decomp);
@@ -449,6 +464,7 @@ export function defn() {
   std_symbol(FUNCTION, Eval_function_reference);
   std_symbol(GAMMA, Eval_gamma);
   std_symbol(GCD, Eval_gcd);
+  std_symbol(GETCURRENTENVIRONMENT, Eval_getCurrentEnvironment);
   std_symbol(HERMITE, Eval_hermite);
   std_symbol(HILBERT, Eval_hilbert);
   std_symbol(IMAG, Eval_imag);
@@ -464,6 +480,7 @@ export function defn() {
   std_symbol(LCM, Eval_lcm);
   std_symbol(LEADING, Eval_leading);
   std_symbol(LEGENDRE, Eval_legendre);
+  std_symbol(LISTENVIRONMENTS, Eval_listEnvironments);
   std_symbol(LOG, Eval_log);
   std_symbol(LOOKUP, Eval_lookup);
   std_symbol(MOD, Eval_mod);
@@ -495,8 +512,10 @@ export function defn() {
   std_symbol(RATIONALIZE, Eval_rationalize);
   std_symbol(REAL, Eval_real);
   std_symbol(YYRECT, Eval_rect);
+  std_symbol(RESTOREENVIRONMENT, Eval_restoreEnvironment);
   std_symbol(ROOTS, Eval_roots);
   std_symbol(ROUND, Eval_round);
+  std_symbol(SAVEENVIRONMENT, Eval_saveEnvironment);
   std_symbol(SETQ, Eval_setq);
   std_symbol(SGN, Eval_sgn);
   std_symbol(SILENTPATTERN, Eval_silentpattern);
@@ -508,6 +527,7 @@ export function defn() {
   std_symbol(STOP, Eval_stop);
   std_symbol(SUBST, Eval_subst);
   std_symbol(SUM, Eval_sum);
+  std_symbol(SWITCHENVIRONMENT, Eval_switchEnvironment);
   std_symbol(SYMBOLSINFO, Eval_symbolsinfo);
   std_symbol(TAN, Eval_tan);
   std_symbol(TANH, Eval_tanh);

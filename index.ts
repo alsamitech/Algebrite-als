@@ -58,6 +58,12 @@ import {
   get_binding, iskeyword,
   set_binding, symbol,
   usr_symbol,
+  createEnvironment,
+  switchEnvironment,
+  getCurrentEnvironment,
+  listEnvironments,
+  saveEnvironment,
+  restoreEnvironment,
 } from './runtime/symbol';
 import { exec, parse } from './runtime/zombocom';
 import {
@@ -179,6 +185,12 @@ $.init = init;
 $.exec = exec;
 $.parse = parse;
 $.run = run;
+$.createEnvironment = createEnvironment;
+$.switchEnvironment = switchEnvironment;
+$.getCurrentEnvironment = getCurrentEnvironment;
+$.listEnvironments = listEnvironments;
+$.saveEnvironment = saveEnvironment;
+$.restoreEnvironment = restoreEnvironment;
 
 const builtin_fns = [
   'abs',
@@ -313,6 +325,12 @@ const builtin_fns = [
   'transpose',
   'unit',
   'zero',
+  'createEnvironment',
+  'switchEnvironment', 
+  'getCurrentEnvironment',
+  'listEnvironments',
+  'saveEnvironment',
+  'restoreEnvironment',
 ];
 
 Array.from(builtin_fns).map(fn => ($[fn] = exec.bind(this, fn)));

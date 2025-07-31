@@ -92,6 +92,98 @@ class Scope {
 let keywordScope = new Scope();
 let userScope = new Scope(keywordScope);
 
+// Environment Management
+class EnvironmentManager {
+  private environments = new Map<string, Scope>();
+  private savedEnvironments = new Map<string, any>();
+  private currentEnvironmentName = 'default';
+
+  constructor() {
+    // Initialize with default environment
+    this.environments.set('default', userScope);
+  }
+
+  createEnvironment(name: string): string {
+    if (this.environments.has(name)) {
+      return name; // Already exists, return name
+    }
+    const newScope = new Scope(keywordScope);
+    this.environments.set(name, newScope);
+    return name;
+  }
+
+  switchEnvironment(name?: string): string {
+    const envName = name || 'default';
+    if (!this.environments.has(envName)) {
+      this.createEnvironment(envName);
+    }
+    
+    userScope = this.environments.get(envName)!;
+    this.currentEnvironmentName = envName;
+    return envName;
+  }
+
+  getCurrentEnvironment(): string {
+    return this.currentEnvironmentName;
+  }
+
+  listEnvironments(): string[] {
+    return Array.from(this.environments.keys()).sort();
+  }
+
+  saveEnvironment(envName: string, backupName: string): string {
+    const env = this.environments.get(envName);
+    if (!env) {
+      throw new Error(`Environment "${envName}" does not exist`);
+    }
+    
+    // Create a simple backup by storing name->value mappings
+    const backup = new Map<string, U>();
+    
+    // Get all bindings from the environment
+    for (const [name, sym] of (env as any).symbols.entries()) {
+      const binding = env.binding(sym);
+      if (binding !== sym) {
+        backup.set(name, binding);
+      }
+    }
+    
+    this.savedEnvironments.set(backupName, backup as any);
+    return backupName;
+  }
+
+  restoreEnvironment(backupName: string): string {
+    const backup = this.savedEnvironments.get(backupName);
+    if (!backup) {
+      throw new Error(`Backup "${backupName}" does not exist`);
+    }
+
+    const currentEnv = this.environments.get(this.currentEnvironmentName)!;
+    
+    // Don't clear, just overwrite the bindings from backup
+    for (const [name, value] of (backup as any).entries()) {
+      const sym = currentEnv.getOrCreate(name);
+      currentEnv.set(sym, value);
+    }
+
+    return this.currentEnvironmentName;
+  }
+
+  withEnvironment<T>(envName: string, fn: () => T): T {
+    const savedEnvName = this.currentEnvironmentName;
+    const savedUserScope = userScope;
+    try {
+      this.switchEnvironment(envName);
+      return fn();
+    } finally {
+      userScope = savedUserScope;
+      this.currentEnvironmentName = savedEnvName;
+    }
+  }
+}
+
+const environmentManager = new EnvironmentManager();
+
 export function inChildScope<T>(f:()=>T):T{
   let savedScope = userScope;
   try {
@@ -226,4 +318,33 @@ export function clearRenamedVariablesToAvoidBindingToExternalScope() {
 
 export function clear_symbol(s:Sym) {
   userScope.delete(s);
+}
+
+// Environment Management API
+export function createEnvironment(name: string): string {
+  return environmentManager.createEnvironment(name);
+}
+
+export function switchEnvironment(name?: string): string {
+  return environmentManager.switchEnvironment(name);
+}
+
+export function getCurrentEnvironment(): string {
+  return environmentManager.getCurrentEnvironment();
+}
+
+export function listEnvironments(): string[] {
+  return environmentManager.listEnvironments();
+}
+
+export function saveEnvironment(envName: string, backupName: string): string {
+  return environmentManager.saveEnvironment(envName, backupName);
+}
+
+export function restoreEnvironment(backupName: string): string {
+  return environmentManager.restoreEnvironment(backupName);
+}
+
+export function withEnvironment<T>(envName: string, fn: () => T): T {
+  return environmentManager.withEnvironment(envName, fn);
 }
